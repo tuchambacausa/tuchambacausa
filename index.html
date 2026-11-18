@@ -194,6 +194,7 @@ h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0}
 .st.no::before{background:var(--no)}
 
 .reg-btn{white-space:nowrap;text-decoration:none;padding:8px 16px;font-size:14px}
+.top .logo{flex:none}.top .logo .word{white-space:nowrap}.nav a span{white-space:nowrap}
 
 /* mapa */
 .mapgrid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start}
@@ -376,6 +377,19 @@ fieldset.field{border:0;padding:0;margin:0}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .vb.ok{background:#3B82F6}}
 :root[data-theme="dark"] .vb.ok{background:#3B82F6}
 .sr{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+/* v28: cuenta, CV y audio */
+.acct{border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--surface-2)}
+.acct-g{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:640px){.acct-g{grid-template-columns:1fr}}
+.rec{display:grid;gap:10px;border:1.5px dashed var(--line);border-radius:12px;padding:12px 14px}
+.rec-guion{font-size:14px;line-height:1.5;background:var(--aji-soft);color:#3b2a00;border-radius:10px;padding:10px 12px}
+.rec-guion i{font-style:normal;font-weight:700;text-decoration:underline dotted}
+.rec-guion span{display:block;margin-top:4px;font-size:12.5px;font-weight:700}
+.rec-ctl{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.rec-ctl audio{height:36px;max-width:100%}
+.rec-t{font-variant-numeric:tabular-nums;font-weight:700;color:var(--muted)}
+#rec-btn.recording{background:#B91C1C;animation:recpulse 1.2s ease-in-out infinite}
+@keyframes recpulse{50%{box-shadow:0 0 0 6px rgb(185 28 28 / .25)}}
 .vgroup{display:flex;flex-direction:column;gap:8px}
 .upl{position:relative;display:flex;align-items:center;gap:12px;border:1.5px dashed var(--line);border-radius:12px;padding:12px 14px}
 .upl.has{border-style:solid;border-color:var(--ya);background:color-mix(in oklab,var(--ya) 8%,transparent)}
@@ -849,6 +863,7 @@ setTimeout(()=>{if(!reduce&&Date.now()-lastTouch>1200)cross(pick())},1400);
       <input id="q" type="search" placeholder="Busca profesionales, chambas o empresas" autocomplete="off">
     </label>
     <nav class="nav" id="nav"></nav>
+    <button class="btn ghost reg-btn" id="loginbtn" type="button">Ingresar</button>
     <a class="btn aji reg-btn" id="regtop" href="#registro">Regístrate</a>
   </div>
 </header>
@@ -1268,70 +1283,44 @@ function mapPanel(){
 function refreshMap(){document.getElementById("mapsvg").innerHTML=mapSVG();{const lg=document.getElementById("mlegend");if(lg)lg.innerHTML=legendHTML()}document.getElementById("mappanel").innerHTML=mapPanel();const c=document.getElementById("mfcount");if(c)c.innerHTML=filterCount()}
 
 /* ---------- registro ---------- */
-/* ---------- planes y pago ---------- */
+/* ---------- planes y pago (v28: gratis para trabajadores, S/ 100 al año para empresas) ---------- */
+const EMP_PRECIO=100,EMP_HASTA="31 de marzo de 2027";
 const PLANES={
- free:{n:"Gratis",precio:0,para:"Para cualquier persona o empresa",items:["Creas tu perfil y apareces en el mapa","Recibes y envías propuestas","Postulas hasta 3 chambas al mes","1 publicación por semana en el muro"],no:["Sin sello de verificado","Apareces después de los verificados"]},
- pro:{n:"Profesional Verificado",precio:30,semana:10,para:"Para profesionales, técnicos y oficios",items:["Sello ✓ Verificado en tu perfil","Apareces primero en el mapa y en las búsquedas","Postulas a todas las chambas que quieras","Publicaciones ilimitadas en el muro","Portafolio con fotos de tus trabajos","Ves qué empresas visitaron tu perfil"]},
- emp:{n:"Empresa Verificada",precio:90,semana:30,para:"Para empresas, consultoras y contratistas",items:["Sello ✓ Empresa verificada","Propuestas y negociaciones sin límite","Publicas chambas destacadas con tu marca","Filtros avanzados: solo verificados, colegiados, experiencia","Destacas el desempeño de quienes contrates"]}
+ pro:{n:"Trabajador",precio:0,para:"Profesionales, técnicos y todos los oficios",items:["Creas tu cuenta y apareces en el mapa","Subes tu CV en PDF","Grabas tu audio de presentación (1 minuto)","Recibes propuestas y negocias por mensajes","Postulas a las chambas que quieras","Sello de verificado con tu DNI"]},
+ emp:{n:"Empresa",precio:EMP_PRECIO,para:"Empresas, consultoras, contratistas y negocios",items:["Buscas en el mapa a quien está disponible cerca de tu obra","Envías propuestas y negocias por mensajes","Publicas tus chambas","Tu RUC y antigüedad visibles para dar confianza","Destacas el desempeño de quienes contrates"]}
 };
 let regType="pro";
-function planCard(k,cta){const p=PLANES[k];return `<article class="card plan ${k}">
+function planCard(k,cta){const p=PLANES[k]||PLANES.pro;k=PLANES[k]?k:"pro";return `<article class="card plan ${k==="pro"?"pro":"emp"}">
   <div class="eyebrow">${p.para}</div><h2>${p.n}</h2>
-  <div class="price">${p.semana?`<b>S/ ${p.semana}</b><span>por semana</span>`:p.precio?`<b>S/ ${p.precio}</b><span>al mes</span>`:`<b>S/ 0</b><span>siempre</span>`}</div>
-  ${p.semana?`<div class="alt">o <b>S/ ${p.precio} por mes</b> · 4 semanas sueltas te costarían S/ ${p.semana*4}</div>`:""}
-  <ul>${p.items.map(i=>`<li>${i}</li>`).join("")}${(p.no||[]).map(i=>`<li class="x">${i}</li>`).join("")}</ul>
-  ${cta?`<a class="btn ${k==="free"?"ghost":k==="pro"?"aji":""}" href="#registro" data-plan="${k==="emp"?"emp":"pro"}" style="text-decoration:none;text-align:center">${k==="free"?"Registrarme gratis":"Elegir "+p.n}</a>`:""}
+  <div class="price">${p.precio?`<b>S/ ${p.precio}</b><span>al año</span>`:`<b>Gratis</b><span>para siempre</span>`}</div>
+  ${p.precio?`<div class="alt">Precio de lanzamiento para las empresas que se registren hasta el ${EMP_HASTA}.</div>`:""}
+  <ul>${p.items.map(i=>`<li>${i}</li>`).join("")}</ul>
+  ${cta?`<a class="btn ${k==="pro"?"aji":""}" href="#registro" data-plan="${k}" style="text-decoration:none;text-align:center">${k==="pro"?"Registrarme gratis":"Registrar mi empresa"}</a>`:""}
 </article>`}
 function viewPlanes(){return `
-<div class="view-head"><div><h1>Planes de Tu Chamba Causa</h1><p>Registrarse es gratis. Si pagas, tu perfil queda verificado y tienes más opciones para que te encuentren.</p></div></div>
+<div class="view-head"><div><h1>Planes de Tu Chamba Causa</h1><p>Para los trabajadores es gratis. Las empresas pagan una vez al año.</p></div></div>
 ${pionBanner()}
-<div class="card nocomm"><b>Sin comisiones por contratación.</b> Tu Chamba Causa cobra solo por juntar a empresas y trabajadores. Lo que acuerden de sueldo es 100 % de ustedes.</div>
-<div class="plans">${planCard("free",true)}${planCard("pro",true)}${planCard("emp",true)}</div>`}
-function planStep(d){const paid=d.type==="emp"?"emp":"pro";
-  if(d.type==="pro"&&pioneros<PION_MAX)return `
+<div class="card nocomm"><b>Sin comisiones por contratación.</b> Tu Chamba Causa no cobra nada del sueldo. Lo que acuerden es 100 % de ustedes, y ninguna empresa puede cobrarle al trabajador.</div>
+<div class="plans" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">${planCard("pro",true)}${planCard("emp",true)}</div>`}
+function payStep(d){return `
 <section class="card pay">
-  <div class="eyebrow">Programa Pioneros</div>
-  <h2>¡${esc(d.label.split(" ")[0])}, puedes ser el Pionero N.º ${fmtN(pioneros+1)}!</h2>
-  <p style="margin:0">Eres de los primeros 100,000 trabajadores. Tu Premium es <b>gratis por 1 año</b>, hasta el ${pionUntil()}: sello de verificado, apareces primero en el mapa, publicas sin límite y armas tu portafolio. Después cuesta solo S/ ${PION_PRICE} al mes, y si no quieres seguir, tu perfil básico sigue gratis.</p>
-  <div class="choose">
-    <div class="ch paid"><b>Activar mi año gratis</b><span>Subes tu DNI y tus certificados para el sello de verificado. No pagas nada.</span><button class="btn aji" data-choose="pionero">Ser Pionero</button></div>
-    <div class="ch free"><b>Solo el perfil básico</b><span>Apareces en el mapa gratis. Puedes activar tu año de Pionero después, mientras queden cupos.</span><button class="btn ghost" data-choose="free">Por ahora no</button></div>
-  </div>
-  <p class="hint" style="margin:0">Quedan ${fmtN(PION_MAX-pioneros)} cupos de Pionero.</p>
-</section>`;
-  return `
-<section class="card pay">
-  <div class="eyebrow">Elige tu plan</div>
-  <h2>¿Cómo quieres empezar, ${esc(d.label.split(" ")[0])}?</h2>
-  <div class="choose">
-    <div class="ch free"><b>Gratis</b><span>${d.type==="emp"?"Tu empresa entra a Tu Chamba Causa y busca en el mapa.":"Apareces en el mapa desde hoy."} Puedes verificarte cuando quieras.</span><button class="btn ghost" data-choose="free">Empezar gratis</button></div>
-    <div class="ch paid"><b>${PLANES[paid].n} · ${PLANES[paid].semana?`desde S/ ${PLANES[paid].semana} por semana`:`S/ ${PLANES[paid].precio} al mes`}</b><span>Sello ✓ Verificado${d.type==="emp"?", propuestas sin límite y chambas destacadas.":", apareces primero y publicas sin límite."}</span><button class="btn ${d.type==="emp"?"":"aji"}" data-choose="paid">Verificarme y pagar</button></div>
-  </div>
-</section>`}
-function payAmt(d){const p=PLANES[d.type];return p.semana&&d.period==="semana"?p.semana:p.precio}
-function payStep(d){const p=PLANES[d.type];if(!d.period)d.period="mes";const amt=payAmt(d);return `
-<section class="card pay">
-  <div class="eyebrow">Pago</div>
-  <h2>Activa tu plan ${p.n}</h2>
-  ${p.semana?`<fieldset class="field"><legend>¿Por cuánto tiempo quieres destacar?</legend>
-    <div class="opts" style="grid-template-columns:1fr 1fr">
-      <label class="opt"><input type="radio" name="period" value="semana" ${d.period==="semana"?"checked":""}><span><b>1 semana · S/ ${p.semana}</b><em>${d.type==="emp"?"Ideal para cubrir un puesto urgente":"Ideal para conseguir una chamba rápida"}</em></span></label>
-      <label class="opt"><input type="radio" name="period" value="mes" ${d.period==="mes"?"checked":""}><span><b>1 mes · S/ ${p.precio}</b><em>Te sale más barato que 4 semanas (S/ ${p.semana*4})</em></span></label>
-    </div></fieldset>`:""}
-  <div class="paysum"><span>${esc(d.label)}</span><b>S/ ${amt}.00 <small>${p.semana&&d.period==="semana"?"por 1 semana":"por 1 mes"}</small></b></div>
+  <div class="eyebrow">Pago anual</div>
+  <h2>Activa la cuenta de ${esc(d.label)}</h2>
+  <div class="paysum"><span>Empresa · 1 año</span><b>S/ ${EMP_PRECIO}.00 <small>al año</small></b></div>
+  <p class="hint" style="margin:0">Precio de lanzamiento para las empresas que se registren hasta el ${EMP_HASTA}.</p>
   <fieldset class="field"><legend>Forma de pago</legend>
     <div class="opts" style="grid-template-columns:repeat(3,1fr)">
       <label class="opt"><input type="radio" name="pay" value="Yape" checked><span><b>Yape / Plin</b><em>Pago desde tu celular</em></span></label>
       <label class="opt"><input type="radio" name="pay" value="Tarjeta"><span><b>Tarjeta</b><em>Débito o crédito</em></span></label>
-      <label class="opt"><input type="radio" name="pay" value="Transferencia"><span><b>Transferencia</b><em>Para empresas</em></span></label>
+      <label class="opt"><input type="radio" name="pay" value="Transferencia"><span><b>Transferencia</b><em>Con factura</em></span></label>
     </div>
   </fieldset>
   <p class="hint" style="margin:0">Prototipo: el pago está simulado, no se cobra nada.</p>
-  <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="paynow" style="padding:11px 24px">Pagar S/ ${amt} y activar</button><button class="btn ghost" id="payback">Volver</button></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="paynow" style="padding:11px 24px">Pagar S/ ${EMP_PRECIO} y activar</button><button class="btn ghost" id="payback">Pagar después</button></div>
 </section>`}
 let pending=null;
 function viewRegistro(){
-  if(pending)return `<div class="view-head"><div><h1>Únete a Tu Chamba Causa</h1></div></div><div class="grid" style="grid-template-columns:minmax(0,1fr) 300px"><div class="col">${pending.step==="plan"?planStep(pending):pending.step==="verif"?verifStep(pending):payStep(pending)}</div><aside class="col">${planCard(pending.step==="plan"?"free":pending.type,false)}</aside></div>`;
+  if(pending)return `<div class="view-head"><div><h1>Únete a Tu Chamba Causa</h1></div></div><div class="grid" style="grid-template-columns:minmax(0,1fr) 300px"><div class="col">${pending.step==="verif"?verifStep(pending):payStep(pending)}</div><aside class="col">${planCard(pending.type,false)}</aside></div>`;
   const deps=uniq(Object.values(CITIES).map(c=>c[0]));
   const cityOpts=deps.map(d=>`<optgroup label="${d}">${Object.keys(CITIES).filter(k=>CITIES[k][0]===d).sort((a,b)=>a.localeCompare(b,"es")).map(k=>`<option value="${esc(k)}">${esc(k)}</option>`).join("")}</optgroup>`).join("");
   const depOpts=deps.map(d=>`<option>${d}</option>`).join("");
@@ -1339,6 +1328,10 @@ function viewRegistro(){
     <label class="opt"><input type="radio" name="r-type" value="pro" ${regType==="pro"?"checked":""}><span><b>Soy profesional</b><em>Ofrezco mi trabajo y quiero salir en el mapa</em></span></label>
     <label class="opt"><input type="radio" name="r-type" value="emp" ${regType==="emp"?"checked":""}><span><b>Soy empresa</b><em>Busco y contrato profesionales</em></span></label></div></fieldset>`;
   const pro=`
+    <fieldset class="field full acct"><legend>Tu cuenta</legend>
+      <div class="acct-g"><div class="field"><label for="a-mail">Correo</label><input id="a-mail" type="email" autocomplete="email" placeholder="tucorreo@gmail.com"></div>
+      <div class="field"><label for="a-pass">Clave</label><input id="a-pass" type="password" autocomplete="new-password" minlength="8" placeholder="Mínimo 8 caracteres"></div></div>
+      <small>Te enviaremos un correo para confirmar tu cuenta. Con este correo y tu clave vuelves a entrar.</small></fieldset>
     <div class="field full"><label for="r-name">Nombre completo</label><input id="r-name" autocomplete="name" placeholder="Ej. María Torres Huamán"></div>
     <div class="field"><label for="r-dni">DNI</label><input id="r-dni" inputmode="numeric" maxlength="8" placeholder="8 dígitos"><small>No se muestra en tu perfil ni en el mapa.</small></div>
     <div class="field"><label for="r-prof">Profesión u oficio</label><input id="r-prof" placeholder="Ej. Ingeniera civil, soldador, enfermera"></div>
@@ -1348,7 +1341,8 @@ function viewRegistro(){
     <fieldset class="field full"><legend>Dirección: solo tu distrito</legend>
       <div class="loc3"><select id="r-dep" aria-label="Departamento"><option value="">Departamento</option>${depOpts}</select><select id="r-prov" aria-label="Provincia" disabled><option value="">Provincia</option></select><select id="r-dist" aria-label="Distrito" disabled><option value="">Distrito</option></select></div>
       <div class="cityonly"><b>Solo pedimos tu distrito.</b> No pongas tu calle ni número: por tu seguridad, en el mapa y en tu perfil solo aparece el distrito. Así las empresas encuentran gente cerca de su obra.</div></fieldset>
-    <div class="field"><label for="r-col">Colegio profesional <small>(opcional)</small></label><select id="r-col">${COLEGIOS.map(c=>`<option value="${c}">${c||"No aplica"}</option>`).join("")}</select></div>
+    <div class="field"><label for="r-col">Colegiatura</label><select id="r-col">${COLEGIOS.map(c=>`<option value="${c}">${c?(c==="Otro"?"Otro colegio":c+" · "+(COLNOM[c]||"")):"No colegiado"}</option>`).join("")}</select><small>Si no estás colegiado, déjalo en "No colegiado".</small></div>
+    <div class="field" id="r-colnum-wrap" hidden><label for="r-colnum">N.º de colegiatura</label><input id="r-colnum" inputmode="numeric" maxlength="12" placeholder="Ej. CIP 123456"><small>Las empresas pueden verificarlo en tu colegio.</small></div>
     <fieldset class="field full"><legend>¿Estás disponible para trabajar?</legend>
       <div class="opts">
         <label class="opt"><input type="radio" name="r-disp" value="ya" checked><span><b>Disponible ya</b><em>Puedo empezar esta semana</em></span></label>
@@ -1358,8 +1352,20 @@ function viewRegistro(){
     </fieldset>
     <div class="field" id="r-desde-wrap" hidden><label for="r-desde">Disponible desde</label><input id="r-desde" type="date"></div>
     <div class="field full"><label class="check"><input type="checkbox" id="r-viaja" checked> Acepto chamba en otras regiones</label></div>
-    <div class="field"><label for="r-wsp">Celular / WhatsApp</label><input id="r-wsp" type="tel" inputmode="tel" placeholder="9XX XXX XXX"><small>Se comparte solo cuando agendas una entrevista.</small></div>`;
+    <div class="field"><label for="r-wsp">Celular / WhatsApp <small>(opcional)</small></label><input id="r-wsp" type="tel" inputmode="tel" placeholder="9XX XXX XXX"><small>Primero conversan por mensajes en la página. El celular solo se comparte cuando acuerdan la entrevista.</small></div>
+    <div class="field full"><label>Tu CV <small>(PDF, máx. 5 MB)</small></label>
+      <div class="upl${regCV?" has":""}"><div class="upl-t"><b>${regCV?esc(regCV.name):"Sube tu CV en PDF"}</b><span>Las empresas lo ven cuando les interesas.</span></div>
+      <label class="btn ghost upl-btn" for="r-cv">${regCV?"Cambiar":"Subir"}</label><input type="file" id="r-cv" accept="application/pdf,.pdf" class="sr"></div></div>
+    <div class="field full"><label>Audio de presentación <small>(opcional, máx. 1 minuto)</small></label>
+      <div class="rec">
+        <div class="rec-guion"><b>Guion para guiarte:</b> "Hola, soy <i>tu nombre</i>. Me dedico a <i>tu oficio</i> y tengo <i>X</i> años de experiencia. Mis últimos tres trabajos fueron: <i>uno</i>, <i>dos</i> y <i>tres</i>. Estoy en <i>tu distrito</i> y estoy disponible para trabajar." <span>No digas tu DNI ni tu dirección.</span></div>
+        <div class="rec-ctl"><button type="button" class="btn" id="rec-btn">${regAudio?"Grabar de nuevo":"● Grabar"}</button><span class="rec-t" id="rec-t">${regAudio?"Listo: "+regAudio.secs+" s":"0:00 / 1:00"}</span>${regAudio?`<audio controls src="${regAudio.url}"></audio><button type="button" class="linkbtn" id="rec-del">Borrar</button>`:""}</div>
+      </div></div>`;
   const emp=`
+    <fieldset class="field full acct"><legend>Tu cuenta</legend>
+      <div class="acct-g"><div class="field"><label for="a-mail">Correo</label><input id="a-mail" type="email" autocomplete="email" placeholder="tucorreo@gmail.com"></div>
+      <div class="field"><label for="a-pass">Clave</label><input id="a-pass" type="password" autocomplete="new-password" minlength="8" placeholder="Mínimo 8 caracteres"></div></div>
+      <small>Te enviaremos un correo para confirmar tu cuenta. Con este correo y tu clave vuelves a entrar.</small></fieldset>
     <div class="field full"><label for="e-razon">Razón social</label><input id="e-razon" placeholder="Ej. Constructora Andina SAC"></div>
     <div class="field"><label for="e-ruc">RUC</label><input id="e-ruc" inputmode="numeric" maxlength="11" placeholder="11 dígitos"></div>
     <div class="field"><label for="e-rubro">Rubro</label><select id="e-rubro"><option value="">Elige un rubro</option>${["Construcción","Minería","Salud","Educación","Comercio","Industria","Servicios","Agroindustria","Tecnología","Otro"].map(r=>`<option>${r}</option>`).join("")}</select></div>
@@ -1378,7 +1384,7 @@ function viewRegistro(){
     <div class="full" style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" type="submit" style="padding:11px 24px">Crear mi cuenta gratis</button><a class="btn ghost" href="#planes" style="text-decoration:none;padding:9px 20px">Ver planes</a></div>
   </form>
   <aside class="col">
-    ${planCard("free",false)}
+    ${planCard(regType,false)}
     <section class="card regside"><h3>Cómo funciona</h3>
       <div class="steps">${regType==="pro"
         ?'<div><b class="n">1</b><span>Te registras con tu profesión y tu ciudad.</span></div><div><b class="n">2</b><span>Apareces en el mapa con tu disponibilidad.</span></div><div><b class="n">3</b><span>Te llegan propuestas, negocias y agendas la entrevista.</span></div>'
@@ -1386,48 +1392,85 @@ function viewRegistro(){
     </section>
   </aside>
 </div>`}
-async function sbGuardar(tabla,fila){
-  if(!sb)return {error:{message:"Sin conexión con la base de datos. Revisa tu internet e inténtalo otra vez."}};
-  const {error}=await sb.from(tabla).insert(fila);
-  if(error&&error.code==="23505")return {error:{message:tabla==="empresas"?"Este RUC ya está registrado en Tu Chamba Causa.":"Este DNI ya está registrado en Tu Chamba Causa."}};
-  if(error)return {error:{message:"No se pudo guardar: "+error.message}};
-  return {}}
+let regCV=null,regAudio=null;
+const SITE=location.origin+location.pathname;
+async function sbSubir(bucket,path,file,tipo){if(!sb||!file)return null;
+  const {error}=await sb.storage.from(bucket).upload(path,file,{contentType:(tipo||file.type||"").split(";")[0],upsert:false});
+  return error?null:path}
+function errCuenta(m){m=String(m||"");
+  if(/already registered|already exists/i.test(m))return "Ese correo ya tiene una cuenta. Usa \"Ingresar\" arriba.";
+  if(/Database error/i.test(m))return "No se pudo crear la cuenta: es posible que ese DNI o RUC ya esté registrado en Tu Chamba Causa.";
+  if(/rate limit|security purposes/i.test(m))return "Hicimos muchos registros seguidos. Espera unos minutos e inténtalo otra vez.";
+  if(/password/i.test(m))return "La clave debe tener al menos 8 caracteres.";
+  if(/email/i.test(m))return "Revisa que el correo esté bien escrito.";
+  return "No se pudo crear la cuenta: "+m}
+async function crearCuenta(meta){
+  if(!sb)return {error:"Sin conexión con la base de datos. Revisa tu internet e inténtalo otra vez."};
+  const {data,error}=await sb.auth.signUp({email:meta._mail,password:meta._pass,options:{emailRedirectTo:SITE,data:Object.fromEntries(Object.entries(meta).filter(([k])=>k[0]!=="_"))}});
+  if(error)return {error:errCuenta(error.message)};
+  if(data&&data.user&&Array.isArray(data.user.identities)&&data.user.identities.length===0)return {error:errCuenta("already registered")};
+  return {user:data.user}}
 async function submitReg(e){
   e.preventDefault();
   const btn=e.target.querySelector('button[type="submit"]');
   const v=id=>(document.getElementById(id)?.value||"").trim();
   const err=document.getElementById("r-err");
+  const fail=m=>{err.textContent=m;err.hidden=false;btn.disabled=false;btn.textContent="Crear mi cuenta gratis";err.scrollIntoView({block:"center",behavior:"smooth"})};
+  const mail=v("a-mail"),pass=(document.getElementById("a-pass")?.value||"");
+  const acct=[!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(mail)&&"tu correo",pass.length<8&&"una clave de al menos 8 caracteres"];
   if(regType==="emp"){
-    const miss=[!v("e-razon")&&"la razón social",!/^\d{11}$/.test(v("e-ruc"))&&"un RUC de 11 dígitos",!v("e-rubro")&&"el rubro",!v("e-prov")&&"el departamento y la ciudad"].filter(Boolean);
-    if(miss.length){err.textContent="Falta completar: "+miss.join(", ")+".";err.hidden=false;return}
-    btn.disabled=true;btn.textContent="Guardando…";
-    const r=await sbGuardar("empresas",{razon_social:v("e-razon"),ruc:v("e-ruc"),rubro:v("e-rubro"),departamento:v("e-dep"),provincia:v("e-prov"),contacto:v("e-contacto")||null,celular:v("e-cel")||null});
-    if(r.error){err.textContent=r.error.message;err.hidden=false;btn.disabled=false;btn.textContent="Crear mi cuenta gratis";return}
-    pending={type:"emp",step:"plan",label:v("e-razon"),razon:v("e-razon")};render();return}
+    const miss=[...acct,!v("e-razon")&&"la razón social",!/^(10|20)\d{9}$/.test(v("e-ruc"))&&"un RUC de 11 dígitos (empieza con 10 o 20)",!v("e-rubro")&&"el rubro",!v("e-prov")&&"el departamento y la ciudad"].filter(Boolean);
+    if(miss.length)return fail("Falta completar: "+miss.join(", ")+".");
+    btn.disabled=true;btn.textContent="Creando tu cuenta…";
+    const r=await crearCuenta({_mail:mail,_pass:pass,tipo:"empresa",perfil_id:crypto.randomUUID(),razon_social:v("e-razon"),ruc:v("e-ruc"),rubro:v("e-rubro"),departamento:v("e-dep"),provincia:v("e-prov"),contacto:v("e-contacto"),celular:v("e-cel")});
+    if(r.error)return fail(r.error);
+    pending={type:"emp",step:"pay",label:v("e-razon"),razon:v("e-razon"),mail};render();return}
   const name=v("r-name"),prof=v("r-prof"),area=v("r-area"),city=v("r-prov"),dist=v("r-dist"),years=parseInt(v("r-years")||"0",10);
   const disp=document.querySelector('input[name="r-disp"]:checked').value;
-  const dni=v("r-dni");
-  const miss=[!name&&"tu nombre",!/^\d{8}$/.test(dni)&&"un DNI de 8 dígitos",!prof&&"tu profesión",!area&&"el área",!dist&&"tu departamento, provincia y distrito"].filter(Boolean);
-  if(miss.length){err.textContent="Falta completar: "+miss.join(", ")+".";err.hidden=false;return}
+  const dni=v("r-dni"),col=v("r-col"),colnum=v("r-colnum");
+  const miss=[...acct,!name&&"tu nombre",!/^\d{8}$/.test(dni)&&"un DNI de 8 dígitos",!prof&&"tu profesión u oficio",!area&&"el área",!dist&&"tu departamento, provincia y distrito",col&&!colnum&&"tu número de colegiatura"].filter(Boolean);
+  if(miss.length)return fail("Falta completar: "+miss.join(", ")+".");
   let desde="";
   if(disp==="pronto"&&v("r-desde")){const d=new Date(v("r-desde")+"T12:00");desde=d.toLocaleDateString("es-PE",{day:"numeric",month:"short"}).replace(".","")}
-  const esp=v("r-esp");
-  const uid=(crypto.randomUUID?crypto.randomUUID():null);
-  btn.disabled=true;btn.textContent="Guardando…";
-  const fila={nombre:name,dni,oficio:prof,area,especialidad:esp||null,anios_exp:isNaN(years)?0:years,colegio:v("r-col")||null,
-    departamento:v("r-dep"),provincia:city,distrito:dist,telefono:v("r-wsp")||null,
-    disponibilidad:disp,disponible:disp!=="no",disponible_desde:(disp==="pronto"&&v("r-desde"))||null,
-    acepta_viajar:!!document.getElementById("r-viaja")?.checked};
-  if(uid)fila.id=uid;
-  const r=await sbGuardar("trabajadores",fila);
-  if(r.error){err.textContent=r.error.message;err.hidden=false;btn.disabled=false;btn.textContent="Crear mi cuenta gratis";return}
-  pending={type:"pro",step:"plan",label:name,person:{id:uid?"db_"+uid:"u"+Date.now(),name,title:prof+(esp?" · "+esp:""),area,city,dist,col:v("r-col"),disp,desde,years:isNaN(years)?0:years}};
+  const esp=v("r-esp"),uid=crypto.randomUUID();
+  const audExt=regAudio?(regAudio.type.includes("mp4")?"m4a":regAudio.type.includes("ogg")?"ogg":"webm"):"";
+  btn.disabled=true;btn.textContent="Creando tu cuenta…";
+  const r=await crearCuenta({_mail:mail,_pass:pass,tipo:"trabajador",perfil_id:uid,nombre:name,dni,oficio:prof,area,especialidad:esp,anios_exp:isNaN(years)?0:years,
+    colegio:col,colegiatura_num:col?colnum:"",departamento:v("r-dep"),provincia:city,distrito:dist,telefono:v("r-wsp"),
+    disponibilidad:disp,disponible_desde:(disp==="pronto"&&v("r-desde"))||"",acepta_viajar:!!document.getElementById("r-viaja")?.checked,
+    cv_path:regCV?uid+"/cv.pdf":"",audio_path:regAudio?uid+"/presentacion."+audExt:""});
+  if(r.error)return fail(r.error);
+  btn.textContent="Subiendo tus archivos…";
+  if(regCV)await sbSubir("cvs",uid+"/cv.pdf",regCV,"application/pdf");
+  if(regAudio)await sbSubir("audios",uid+"/presentacion."+audExt,regAudio.blob,regAudio.type);
+  regCV=null;if(regAudio){regAudio=null}
+  pending={type:"pro",step:"verif",label:name,uid,mail,person:{id:"db_"+uid,name,title:prof+(esp?" · "+esp:""),area,city,dist,col,disp,desde,years:isNaN(years)?0:years}};
   render();
 }
-document.addEventListener("click",e=>{const c=e.target.closest&&e.target.closest("[data-choose]");if(!c||!pending)return;
-  if(c.dataset.choose==="free"){pending.free=true;finishPay();return}
-  if(c.dataset.choose==="pionero"){pending.pionero=true;pending.step="verif";render();return}
-  pending.step=pending.type==="pro"?"verif":"pay";render()});
+/* CV en PDF */
+document.addEventListener("change",e=>{if(e.target.id!=="r-cv")return;const f=e.target.files[0];if(!f)return;
+  if(!/pdf$/i.test(f.type)&&!/\.pdf$/i.test(f.name)){toast("El CV tiene que ser un archivo PDF");e.target.value="";return}
+  if(f.size>5*1024*1024){toast("El PDF pesa más de 5 MB. Prueba con uno más liviano");e.target.value="";return}
+  regCV=f;const box=e.target.closest(".upl");box.classList.add("has");box.querySelector("b").textContent=f.name;box.querySelector(".upl-btn").textContent="Cambiar"});
+/* audio de presentación: máximo 1 minuto */
+let rec=null;
+function recUI(){const b=document.getElementById("rec-btn");if(!b)return;const t=document.getElementById("rec-t");
+  if(rec){b.textContent="■ Detener";b.classList.add("recording");const s=Math.floor((Date.now()-rec.t0)/1000);t.textContent=`0:${String(Math.min(60,s)).padStart(2,"0")} / 1:00`}}
+document.addEventListener("click",async e=>{
+  if(e.target.id==="rec-del"){if(regAudio)URL.revokeObjectURL(regAudio.url);regAudio=null;render();return}
+  if(e.target.id!=="rec-btn")return;
+  if(rec){rec.mr.stop();return}
+  if(!navigator.mediaDevices||!window.MediaRecorder){toast("Tu navegador no permite grabar audio. Prueba con Chrome.");return}
+  let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:true})}catch(_){toast("Necesitamos permiso para usar tu micrófono");return}
+  const type=["audio/webm;codecs=opus","audio/webm","audio/mp4","audio/ogg"].find(t=>MediaRecorder.isTypeSupported(t))||"";
+  const mr=new MediaRecorder(stream,type?{mimeType:type}:{}),chunks=[];
+  rec={mr,t0:Date.now(),iv:setInterval(recUI,250),to:setTimeout(()=>mr.state==="recording"&&mr.stop(),60000)};
+  mr.ondataavailable=ev=>ev.data.size&&chunks.push(ev.data);
+  mr.onstop=()=>{clearInterval(rec.iv);clearTimeout(rec.to);const secs=Math.max(1,Math.round((Date.now()-rec.t0)/1000));rec=null;stream.getTracks().forEach(t=>t.stop());
+    const blob=new Blob(chunks,{type:mr.mimeType||type||"audio/webm"});if(regAudio)URL.revokeObjectURL(regAudio.url);
+    regAudio={blob,type:blob.type,url:URL.createObjectURL(blob),secs:Math.min(60,secs)};
+    const wrap=document.querySelector(".rec-ctl");if(wrap)wrap.outerHTML=`<div class="rec-ctl"><button type="button" class="btn" id="rec-btn">Grabar de nuevo</button><span class="rec-t" id="rec-t">Listo: ${regAudio.secs} s</span><audio controls src="${regAudio.url}"></audio><button type="button" class="linkbtn" id="rec-del">Borrar</button></div>`};
+  mr.start(250);recUI()});
 document.addEventListener("change",e=>{if(e.target.name==="period"&&pending){pending.period=e.target.value;render()}});
 document.addEventListener("click",e=>{const b=e.target.closest&&e.target.closest("[data-boost]");if(!b)return;
   const w=b.dataset.boost==="semana";toast(`Pago simulado: tu perfil sale destacado por ${w?"1 semana (S/ 10)":"1 mes (S/ 30)"}`)});
@@ -1445,16 +1488,18 @@ document.addEventListener("change",e=>{
     ds.innerHTML='<option value="">Distrito</option>'+(DIST[k]||[]).map(r=>`<option>${esc(r[0])}</option>`).join("");ds.disabled=!k}
 });
 function finishPay(){const d=pending;pending=null;const how=(document.querySelector('input[name="pay"]:checked')||{}).value||"Yape";
-  if(d.type==="emp"){location.hash="inicio";setTimeout(()=>toast(d.free?`¡${d.razon} ya está en Tu Chamba Causa! Busca profesionales en el mapa.`:`¡${d.razon} ya es Empresa Verificada por ${d.period==="semana"?"1 semana":"1 mes"}! Pagaste con ${how}.`),50);return}
-  d.person.verif=d.free?"no":d.pionero?"rev":"ok";if(d.pionero)d.person.pionero=++pioneros;
-  const p=prep(d.person,people.length);people.push(p);lastReg=p.id;selCity=p.city;selDist=p.dist;{const d=(DIST[p.city]||[]).find(r=>r[0]===p.dist);if(d){const [x,y]=proj(d[1],d[2]);setFocus(x,y,6)}}Object.assign(fM,{prof:"",area:"",dep:"",exp:"",col:false,ver:false,disp:p.disp==="ya"?"ya":""});
-  location.hash="inicio";setTimeout(()=>toast(`¡Listo, ${p.name.split(" ")[0]}! Ya apareces en el mapa en ${p.plc}.${p.pionero?` Eres el Pionero N.º ${fmtN(p.pionero)}: Premium gratis por 1 año. Tus documentos están en revisión.`:p.verif==="ok"?` Perfil verificado y destacado por ${d.period==="semana"?"1 semana":"1 mes"}.`:" Verifícate para salir primero."}`),50)}
+  const conf=` Te enviamos un correo a ${d.mail}: ábrelo para confirmar tu cuenta.`;
+  if(d.type==="emp"){location.hash="inicio";setTimeout(()=>toast(d.free?`¡${d.razon} ya está en Tu Chamba Causa!${conf}`:`¡${d.razon} activó su año por S/ ${EMP_PRECIO} con ${how}!${conf}`),50);return}
+  d.person.verif=d.dniFoto?"rev":"no";
+  const p=prep(d.person,people.length);people.push(p);lastReg=p.id;selCity=p.city;selDist=p.dist;{const q=(DIST[p.city]||[]).find(r=>r[0]===p.dist);if(q){const [x,y]=proj(q[1],q[2]);setFocus(x,y,6)}}Object.assign(fM,{prof:"",area:"",dep:"",exp:"",col:false,ver:false,disp:p.disp==="ya"?"ya":""});
+  location.hash="inicio";setTimeout(()=>toast(`¡Listo, ${p.name.split(" ")[0]}! Ya apareces en el mapa en ${p.plc}.${d.dniFoto?" Tu DNI está en revisión para el sello de verificado.":""}${conf}`),50)}
 document.addEventListener("click",e=>{
   if(e.target.id==="paynow"){finishPay();return}
-  if(e.target.id==="payback"){pending=null;render();return}
+  if(e.target.id==="payback"&&pending){pending.free=true;finishPay();return}
   const pl=e.target.closest("[data-plan]");if(pl){regType=pl.dataset.plan;pending=null;if(current()==="registro"){e.preventDefault();render()}}
 });
 document.addEventListener("change",e=>{if(e.target.name==="r-type"){regType=e.target.value;render()}});
+document.addEventListener("change",e=>{if(e.target.id!=="r-col")return;const w=document.getElementById("r-colnum-wrap");w.hidden=!e.target.value;const i=document.getElementById("r-colnum");i.placeholder=e.target.value&&e.target.value!=="Otro"?`Ej. ${e.target.value} 123456`:"Número";if(!e.target.value)i.value=""});
 
 /* ---------- chambas ---------- */
 const fJ={dep:"",area:"",mod:""};
@@ -1519,8 +1564,6 @@ function viewPerfil(){const me=P(ME);return `
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn" id="editp">Editar perfil</button><button class="btn ghost" data-showmap="${me.city}">Verme en el mapa</button></div>
       </div>
     </section>
-    <section class="card boost"><div><h3>Destaca tu perfil</h3><p>Sal primero en el mapa y en las búsquedas de las empresas.</p></div>
-      <div class="boost-b"><button class="btn ghost" data-boost="semana">1 semana · S/ 10</button><button class="btn aji" data-boost="mes">1 mes · S/ 30</button></div></section>
     ${verifPanel(me)}
     <section class="card"><h3>Sobre mí</h3><p style="margin:0">Más de diez años en construcción minera: pads de lixiviación y botaderos. Hago levantamientos con dron y LiDAR, modelos 3D en Civil 3D y herramientas propias en AutoLISP para acelerar el trabajo en obra.</p></section>
     <section class="card"><h3>Experiencia</h3>
@@ -1548,8 +1591,8 @@ const VERIF_DOCS=[["penales","Certificado de antecedentes penales"],["policiales
 const PION_MAX=100000,PION_PRICE=5;let pioneros=0; /* v25: se cuenta con los registrados reales */
 const pbadge=p=>p.pionero?`<span class="pb" title="Uno de los primeros 100,000 trabajadores de Tu Chamba Causa">Pionero N.º ${fmtN(p.pionero)}</span>`:"";
 const pionUntil=()=>{const d=new Date();d.setFullYear(d.getFullYear()+1);return d.toLocaleDateString("es-PE",{day:"numeric",month:"long",year:"numeric"})};
-function pionBanner(){const left=PION_MAX-pioneros,pct=pioneros/PION_MAX*100;return `<section class="card pion"><div class="pion-t"><span class="pb">Programa Pioneros</span><b>Los primeros 100,000 trabajadores tienen Premium gratis por 1 año</b><span>Sello de verificado, salir destacado y portafolio. Después, solo S/ ${PION_PRICE} al mes.</span></div><div class="pion-c"><div class="pion-n"><b>${fmtN(left)}</b> cupos libres</div><div class="pion-bar"><i style="width:${pct.toFixed(1)}%"></i></div><span class="hint">${fmtN(pioneros)} de 100,000 ya son Pioneros</span></div><a class="btn aji" href="#registro" style="text-decoration:none;white-space:nowrap">Quiero ser Pionero</a></section>`}
-const vbadge=p=>p.verif==="ok"?'<span class="vb ok" title="Perfil verificado: plan pagado, DNI y documentos revisados">✓ Verificado</span>':p.verif==="rev"?'<span class="vb rev">En revisión</span>':'<span class="vb no">Sin verificar</span>';
+function pionBanner(){return `<section class="card pion"><div class="pion-t"><span class="pb">Gratis para trabajadores</span><b>Regístrate, sube tu CV y graba tu audio de presentación. No pagas nada.</b><span>Profesionales, técnicos y todos los oficios del Perú.</span></div><div class="pion-c"><div class="pion-n"><b>S/ ${EMP_PRECIO}</b> al año para empresas</div><span class="hint">Precio de lanzamiento hasta el ${EMP_HASTA}</span></div><a class="btn aji" href="#registro" data-plan="pro" style="text-decoration:none">Regístrate gratis</a></section>`}
+const vbadge=p=>p.verif==="ok"?'<span class="vb ok" title="Perfil verificado: DNI revisado">✓ Verificado</span>':p.verif==="rev"?'<span class="vb rev">En revisión</span>':'<span class="vb no">Sin verificar</span>';
 const vfiles={};
 function fileField(id,label,multi){const f=vfiles[id]||[];return `<div class="upl${f.length?" has":""}">
   <div class="upl-t"><b>${label}</b><span id="${id}-names">${f.length?f.map(esc).join(", "):"PDF o foto, máx. 5 MB"}</span></div>
@@ -1558,20 +1601,31 @@ function fileField(id,label,multi){const f=vfiles[id]||[];return `<div class="up
 </div>`}
 function verifStep(d){return `
 <section class="card pay">
-  <div class="eyebrow">Validación</div>
-  <h2>Valida tu perfil</h2>
-  <p style="margin:0;color:var(--muted)">Los perfiles verificados reciben más propuestas: las empresas ven un sello de confianza junto a tu nombre. Tus documentos no se publican; solo se muestra el sello.</p>
-  <div class="field" style="max-width:280px"><label for="v-dni">Número de DNI</label><input id="v-dni" inputmode="numeric" maxlength="8" placeholder="8 dígitos" value="${esc(d.dni||"")}"><small>Validamos que el DNI corresponda a tu nombre.</small></div>
-  <div class="vgroup"><div class="eyebrow">Antecedentes</div><p class="hint" style="margin:0">Los tramitas tú mismo en línea y los subes aquí. Comprobamos su autenticidad con el código de verificación de cada certificado.</p>
-    ${VERIF_DOCS.map(([k,l])=>fileField("v-"+k,l,false)).join("")}</div>
-  <div class="vgroup"><div class="eyebrow">Experiencia</div>
-    ${fileField("v-trabajo","Últimos certificados de trabajo (hasta 3)",true)}</div>
-  <label class="check consent"><input type="checkbox" id="v-ok"> <span>Autorizo a Tu Chamba Causa a revisar estos documentos solo para validar mi perfil, conforme a la Ley N.º 29733 de Protección de Datos Personales. Puedo pedir que se eliminen cuando quiera.</span></label>
+  <div class="eyebrow">¡Cuenta creada!</div>
+  <h2>${esc(d.label.split(" ")[0])}, ¿quieres el sello de verificado?</h2>
+  <p style="margin:0;color:var(--muted)">Es opcional y gratis. Sube una foto de tu DNI (por delante) y revisamos que coincida con tu nombre. Las empresas solo ven el sello ✓; tu DNI nunca se publica.</p>
+  <div class="upl" id="v-dni-box"><div class="upl-t"><b>Foto de tu DNI</b><span id="v-dni-name">Foto o PDF, máx. 5 MB</span></div>
+    <label class="btn ghost upl-btn" for="v-dni-file">Subir</label><input type="file" id="v-dni-file" accept="image/*,application/pdf" class="sr"></div>
+  <label class="check consent"><input type="checkbox" id="v-ok"> <span>Autorizo a Tu Chamba Causa a revisar mi DNI solo para validar mi perfil, conforme a la Ley N.º 29733 de Protección de Datos Personales. Puedo pedir que se elimine cuando quiera.</span></label>
   <div class="err" id="v-err" hidden></div>
-  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn" id="vnext" style="padding:11px 24px">Enviar a validación y continuar</button><button class="linkbtn" id="vskip">Volver a los planes</button></div>
-  <p class="hint" style="margin:0">Prototipo: los archivos no se envían a ningún lado.</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn" id="vnext" style="padding:11px 24px">Enviar mi DNI</button><button class="linkbtn" id="vskip">Ahora no, entrar al mapa</button></div>
 </section>`}
-function verifPanel(p){const done=p.verif==="ok";const rows=[["Identidad (DNI)",done],["Antecedentes penales",done],["Antecedentes policiales",done],["Antecedentes judiciales",done],["Certificados de trabajo (2)",done]];
+let vDni=null;
+document.addEventListener("change",e=>{if(e.target.id!=="v-dni-file")return;const f=e.target.files[0];if(!f)return;
+  if(f.size>5*1024*1024){toast("El archivo pesa más de 5 MB");e.target.value="";return}
+  vDni=f;document.getElementById("v-dni-name").textContent=f.name;document.getElementById("v-dni-box").classList.add("has")});
+document.addEventListener("click",async e=>{
+  if(e.target.id==="vskip"&&pending){vDni=null;finishPay();return}
+  if(e.target.id==="vnext"&&pending){const err=document.getElementById("v-err");
+    const miss=[!vDni&&"la foto de tu DNI",!document.getElementById("v-ok").checked&&"tu autorización"].filter(Boolean);
+    if(miss.length){err.textContent="Falta: "+miss.join(" y ")+".";err.hidden=false;return}
+    e.target.disabled=true;e.target.textContent="Enviando…";
+    const ext=(vDni.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"");
+    const ok=await sbSubir("dni",pending.uid+"/dni."+ext,vDni);vDni=null;
+    if(!ok){err.textContent="No se pudo subir el archivo. Inténtalo otra vez o entra al mapa y te verificas después.";err.hidden=false;e.target.disabled=false;e.target.textContent="Enviar mi DNI";return}
+    pending.dniFoto=true;finishPay()}
+});
+function verifPanel(p){const done=p.verif==="ok";const rows=[["Identidad (DNI)",done],["Correo confirmado",true]];
  return `<section class="card"><h3>Verificación ${vbadge(p)}</h3>
   <ul class="vlist">${rows.map(([l,ok])=>`<li class="${ok?"ok":""}"><i>${ok?"✓":"–"}</i>${l}</li>`).join("")}</ul>
   <p class="hint" style="margin:10px 0 0">Las empresas solo ven el sello. Tus documentos no son públicos.</p></section>`}
@@ -1580,14 +1634,7 @@ document.addEventListener("change",e=>{const id=e.target.dataset&&e.target.datas
   const box=e.target.closest(".upl");box.classList.toggle("has",vfiles[id].length>0);
   document.getElementById(id+"-names").textContent=vfiles[id].join(", ")||"PDF o foto, máx. 5 MB";
   box.querySelector(".upl-btn").textContent=vfiles[id].length?"Cambiar":"Subir"});
-document.addEventListener("click",e=>{
-  if(e.target.id==="vskip"&&pending){pending.step="plan";render();return}
-  if(e.target.id==="vnext"&&pending){const dni=document.getElementById("v-dni").value.trim(),err=document.getElementById("v-err");
-    const docs=VERIF_DOCS.filter(([k])=>(vfiles["v-"+k]||[]).length).length,trab=(vfiles["v-trabajo"]||[]).length;
-    const miss=[!/^\d{8}$/.test(dni)&&"un DNI de 8 dígitos",docs<3&&"los 3 certificados de antecedentes",!trab&&"al menos un certificado de trabajo",!document.getElementById("v-ok").checked&&"tu autorización"].filter(Boolean);
-    if(miss.length){err.textContent="Falta: "+miss.join(", ")+". Si no los tienes a la mano, puedes empezar gratis y verificarte después.";err.hidden=false;return}
-    pending.dni=dni;if(pending.pionero){Object.keys(vfiles).forEach(k=>delete vfiles[k]);finishPay();return}pending.step="pay";Object.keys(vfiles).forEach(k=>delete vfiles[k]);render()}
-});
+
 
 /* ---------- destacados ---------- */
 const YEAR=2026;
@@ -1876,7 +1923,7 @@ function viewProveedores(){const l=provFiltered(),deps=uniq(Object.values(CITIES
 <p style="color:var(--muted);margin:0 0 12px">${l.length} proveedores${fPv.cat?` de <b>${esc(PCAT[fPv.cat][1].toLowerCase())}</b>`:""}${fPv.prov?` en ${esc(short(fPv.prov))}${fPv.near?" y alrededores":""}`:fPv.dep?` en ${esc(fPv.dep)}`:""}</p>
 ${l.length?`<div class="cards">${l.map(provCard).join("")}</div>`:`<div class="card" style="text-align:center;padding:28px"><b>No hay proveedores con esos filtros todavía</b><p class="hint">Prueba con provincias cercanas o otra categoría.</p></div>`}
 <p class="hint" id="pno">Los proveedores solo muestran su provincia, no su dirección exacta. El teléfono se comparte cuando ambos aceptan la cotización.</p>
-<div class="card" style="margin-top:16px;display:grid;gap:6px"><b>¿Tienes volquetes, maquinaria o un negocio que atiende obras?</b><span style="color:var(--muted)">Regístralo gratis. Para salir primero en tu zona: Destacado S/ ${PLANES.emp.semana} por semana o S/ ${PLANES.emp.precio} al mes, igual que las empresas.</span></div>`}
+<div class="card" style="margin-top:16px;display:grid;gap:6px"><b>¿Tienes volquetes, maquinaria o un negocio que atiende obras?</b><span style="color:var(--muted)">Regístralo y las obras de tu zona te encontrarán en el mapa.</span></div>`}
 function openCotiza(id){const p=PROVS.find(x=>x.id===id),m=document.getElementById("modal");
   m.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="ct"><h2 id="ct" style="font-size:20px">Pedir cotización</h2>
   <p style="margin:0;color:var(--muted)">${esc(p.n)} · ${esc(p.plc)} · ${pdot(p.disp)}</p>
@@ -2141,10 +2188,43 @@ function render(){
   document.getElementById("app").innerHTML={inicio:viewInicio,muro:viewMuro,chambas:viewChambas,profesionales:viewProfesionales,perfil:viewPerfil,registro:viewRegistro,planes:viewPlanes,mensajes:viewMensajes,destacados:viewDestacados,persona:viewPersona,aprende:viewAprende,proveedores:viewProveedores}[v]();
   renderNav();
   if(v==="mensajes"){const c=document.getElementById("chat");if(c)c.scrollTop=c.scrollHeight}
-  document.getElementById("regtop").hidden=(v==="registro");
+  document.getElementById("regtop").hidden=(v==="registro")||(typeof sesion!=="undefined"&&!!sesion);
   window.scrollTo(0,0);
 }
 window.addEventListener("hashchange",render);
+/* ---------- inicio de sesión (Supabase Auth) ---------- */
+let sesion=null;
+async function miNombre(){if(!sb||!sesion)return "";const uid=sesion.user.id;
+  const t=await sb.from("trabajadores").select("nombre").eq("user_id",uid).maybeSingle();if(t.data)return t.data.nombre.split(" ")[0];
+  const e=await sb.from("empresas").select("razon_social").eq("user_id",uid).maybeSingle();return e.data?e.data.razon_social:""}
+async function pintarSesion(){const b=document.getElementById("loginbtn");if(!b)return;
+  if(sesion){const n=await miNombre();b.textContent="Salir";b.title=(n?n+": ":"")+"cerrar sesión";document.getElementById("regtop").hidden=true}
+  else{b.textContent="Ingresar";b.title="";document.getElementById("regtop").hidden=current()==="registro"}}
+function abrirLogin(){const m=document.getElementById("modal");
+  m.innerHTML=`<div class="sheet" role="dialog" aria-modal="true" aria-labelledby="lgt" style="width:min(420px,100%)"><h2 id="lgt" style="font-size:20px;margin:0">Ingresar a Tu Chamba Causa</h2>
+  <form id="loginform" style="display:grid;gap:12px" novalidate>
+    <div class="field"><label for="lg-mail">Correo</label><input id="lg-mail" type="email" autocomplete="email"></div>
+    <div class="field"><label for="lg-pass">Clave</label><input id="lg-pass" type="password" autocomplete="current-password"></div>
+    <div class="err" id="lg-err" hidden></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center"><button class="btn" type="submit">Ingresar</button><button class="btn ghost" type="button" data-n="cancel">Cancelar</button><button class="linkbtn" type="button" id="lg-olvido">Olvidé mi clave</button></div>
+    <p class="hint" style="margin:0">¿No tienes cuenta? <a href="#registro" data-n="cancel">Regístrate gratis</a></p>
+  </form></div>`;m.hidden=false;setTimeout(()=>document.getElementById("lg-mail").focus(),30)}
+document.addEventListener("click",async e=>{
+  if(e.target.id==="loginbtn"){if(sesion){await sb.auth.signOut();sesion=null;pintarSesion();toast("Cerraste sesión");return}abrirLogin();return}
+  if(e.target.id==="lg-olvido"){const mail=document.getElementById("lg-mail").value.trim(),err=document.getElementById("lg-err");
+    if(!mail){err.textContent="Escribe tu correo y vuelve a tocar \"Olvidé mi clave\".";err.hidden=false;return}
+    const {error}=await sb.auth.resetPasswordForEmail(mail,{redirectTo:SITE});
+    err.textContent=error?"No se pudo enviar: "+error.message:"Te enviamos un correo para cambiar tu clave.";err.hidden=false}
+});
+document.addEventListener("submit",async e=>{if(e.target.id!=="loginform")return;e.preventDefault();
+  const mail=document.getElementById("lg-mail").value.trim(),pass=document.getElementById("lg-pass").value,err=document.getElementById("lg-err");
+  if(!sb){err.textContent="Sin conexión con la base de datos.";err.hidden=false;return}
+  const {data,error}=await sb.auth.signInWithPassword({email:mail,password:pass});
+  if(error){err.textContent=/confirm/i.test(error.message)?"Primero confirma tu cuenta con el enlace que te enviamos al correo.":/invalid/i.test(error.message)?"Correo o clave incorrectos.":error.message;err.hidden=false;return}
+  sesion=data.session;closeModal();await pintarSesion();toast("¡Bienvenido de vuelta!")});
+/* cambio de clave desde el enlace del correo */
+if(sb)sb.auth.onAuthStateChange(async(ev,ses)=>{sesion=ses;pintarSesion();
+  if(ev==="PASSWORD_RECOVERY"){const n=prompt("Escribe tu nueva clave (mínimo 8 caracteres):");if(n&&n.length>=8){const {error}=await sb.auth.updateUser({password:n});toast(error?"No se pudo cambiar la clave":"Clave cambiada. ¡Listo!")}}});
 async function cargarRegistrados(){
   if(!sb)return;
   const {data,error}=await sb.from("perfiles_publicos").select("*").order("creado",{ascending:false}).limit(2000);
@@ -2152,7 +2232,7 @@ async function cargarRegistrados(){
   let n=0;
   data.forEach(r=>{const id="db_"+r.id;if(P(id)||!CITIES[r.provincia])return;
     const p=prep({id,name:r.nombre,title:r.oficio+(r.especialidad?" · "+r.especialidad:""),area:r.area||"",city:r.provincia,dist:r.distrito,
-      col:r.colegio||"",disp:r.disponibilidad||(r.disponible?"ya":"no"),years:r.anios_exp||0,verif:r.verificado?"ok":"no",real:true},people.length);
+      col:r.colegio||"",colnum:r.colegiatura_num||"",audio:r.audio_url?sb.storage.from("audios").getPublicUrl(r.audio_url).data.publicUrl:"",disp:r.disponibilidad||(r.disponible?"ya":"no"),years:r.anios_exp||0,verif:r.verificado?"ok":"no",real:true},people.length);
     people.push(p);n++});
   if(!n)return;
   pioneros=Math.max(pioneros,people.length);
