@@ -576,8 +576,31 @@ fieldset.field{border:0;padding:0;margin:0}
 .pvrow[aria-pressed="true"]{background:color-mix(in srgb,var(--pv) 10%,transparent)}
 .pvrow>b{color:var(--pv)}
 @media (max-width:720px){.bottom a{min-width:0;font-size:10px;letter-spacing:-.01em}.bottom a span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+/* ---------- aviso en construcción ---------- */
+.obra{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;background:#B91C1C;color:#fff;text-align:center}
+.obra-in{max-width:520px;display:flex;flex-direction:column;gap:16px;align-items:center}
+.obra h1{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:clamp(34px,7vw,56px);line-height:1;margin:0;letter-spacing:-.02em}
+.obra p{font-size:18px;line-height:1.5;margin:0;opacity:.95}
+.obra .pill{background:#F2B124;color:#5A3D00;font-weight:700;padding:6px 14px;border-radius:999px;font-size:14px}
+.obra small{opacity:.8;font-size:14px}
+html.prueba .obra{display:none}
+html:not(.prueba) body{overflow:hidden}
+.prueba-band{display:none}
+html.prueba .prueba-band{display:block;position:fixed;left:12px;bottom:12px;z-index:9998;background:#F2B124;color:#5A3D00;font:600 12px system-ui,sans-serif;padding:6px 10px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 </style>
+<script>
+(function(){var q=location.search,k="tcc_prueba";
+  try{if(/[?&]prueba=tcc2026\b/.test(q))localStorage.setItem(k,"1");if(/[?&]salir\b/.test(q))localStorage.removeItem(k);
+    if(localStorage.getItem(k)==="1")document.documentElement.classList.add("prueba")}catch(e){}})();
+</script>
 
+<div class="obra" role="dialog" aria-label="Página en construcción"><div class="obra-in">
+  <span class="pill">Muy pronto</span>
+  <h1>Tu Chamba Causa</h1>
+  <p>Estamos preparando la plataforma para conectar a trabajadores y empresas de todo el Perú.</p>
+  <small>Página en construcción · tuchambacausa.pe</small>
+</div></div>
+<div class="prueba-band">Modo prueba · el público ve "Muy pronto"</div>
 <header class="top">
   <div class="top-in">
     <a class="logo" href="#inicio" aria-label="Tu Chamba Causa, inicio">
@@ -641,7 +664,7 @@ const COLEGIOS=["","CIP","CMP","CEP","CAP","CCP","CAL","CPPe","CPsP","CBP","Otro
 const DISP={ya:"Disponible",pronto:"Termina pronto",no:"Trabajando"};
 
 const COLORS=["#0E7A5C","#C2410C","#7C3AED","#0369A1","#B45309","#BE185D","#15803D","#4338CA"];
-const people=[
+const DEMO=[
  {id:"joel",pionero:1,name:"Joel Flores",title:"Ing. Civil · Topografía, fotogrametría y modelamiento 3D",area:"Ingeniería",city:"Lima",col:"CIP",disp:"ya",years:10},
  {id:"rosa",name:"Rosa Quispe Mamani",title:"Enfermera · Emergencias y triaje",area:"Salud",city:"Puno",col:"CEP",disp:"ya",years:6},
  {id:"luis",name:"Luis Huamán Torres",title:"Contador público · Tributación para mypes",area:"Finanzas",city:"Lima",col:"CCP",disp:"no",years:12},
@@ -678,14 +701,16 @@ const people=[
  {id:"kevin",name:"Kevin Tello Arévalo",title:"Mecánico automotriz · Motores diésel",area:"Mecánica",city:"Pucallpa",col:"",disp:"ya",years:8},
  {id:"teresa",name:"Teresa Llanos Bazán",title:"Obstetra · Salud materna",area:"Salud",city:"Cajamarca",col:"",disp:"ya",years:8}
 ];
+/* v25: en el mapa y en las listas solo salen personas registradas de verdad (Supabase) */
+const people=[];
 const VMAP={diego:"rev",fiorella:"rev",walter:"no",hugo:"no",oscar:"no",nadia:"rev"};
 function prep(p,i){if(!p.verif)p.verif=VMAP[p.id]||"ok";p.color=COLORS[i%COLORS.length];p.ini=p.name.split(" ").slice(0,2).map(w=>w[0]).join("");if(!CITIES[p.city]&&CITYMAP[p.city])p.city=CITYMAP[p.city];p.dep=CITIES[p.city][0];
   if(!p.dist){const ds=DIST[p.city]||[];p.dist=p.gen&&ds.length?ds[hashN(p.id)%ds.length][0]:nearestDist(p.city)}
   p.plc=p.dist+(norm(short(p.city))!==norm(p.dist)?", "+short(p.city):"");return p}
-people.forEach(prep);
-const P=id=>people.find(p=>p.id===id)||SAMP.get(id);
+DEMO.forEach(prep);
+const P=id=>people.find(p=>p.id===id)||DEMO.find(p=>p.id===id)||SAMP.get(id);
 /* simulación a escala LinkedIn Perú: 11 150 000 usuarios (NapoleonCat, set. 2026), repartidos según la población de cada distrito */
-const SIM_TOTAL=11150000;
+const SIM_TOTAL=0; /* v25: sin usuarios simulados */
 const NOM=["Luis","Carlos","José","Juan","Miguel","Jorge","Pedro","Víctor","César","Raúl","Edwin","Wilber","Percy","Fredy","Hugo","Alex","Kevin","Diego","Renzo","Jhon","María","Rosa","Carmen","Ana","Lucía","Gladys","Sonia","Elena","Milagros","Karina","Yesenia","Flor","Katherine","Nelly","Ruth","Silvia","Patricia","Fiorella","Diana","Mariela"];
 const APE=["Quispe","Mamani","Huamán","Flores","Condori","Rojas","Sánchez","García","Chávez","Ramos","Torres","Vargas","Mendoza","Castillo","Gutiérrez","Ccori","Apaza","Ticona","Huanca","Paredes","Cruz","Díaz","Ruiz","Salazar","Ayala","Vega","Pari","Llanos","Tello","Inga","Chumpitaz","Zegarra","Cárdenas","Espinoza","Arévalo"];
 const OF=[["Albañil","Construcción y oficios","",9],["Maestro de obra","Construcción y oficios","",3],["Pintor","Construcción y oficios","",4],["Gasfitero","Construcción y oficios","",3],["Electricista","Construcción y oficios","",4],["Carpintero","Construcción y oficios","",3],["Soldador","Construcción y oficios","",2],["Operador de maquinaria pesada","Transporte y maquinaria","",3],["Operador de volquete","Transporte y maquinaria","",2],["Chofer","Transporte y maquinaria","",6],["Almacenero","Transporte y maquinaria","",3],["Jardinero","Hogar y jardín","",2],["Limpieza de hogares y oficinas","Hogar y jardín","",5],["Niñera","Hogar y jardín","",2],["Vigilante","Hogar y jardín","",3],["Cocinero","Gastronomía","",4],["Mozo","Gastronomía","",4],["Mecánico automotriz","Mecánica","",3],["Costurera","Belleza y cuidado personal","",2],["Estilista","Belleza y cuidado personal","",2],["Técnico en enfermería","Salud","",3],["Enfermera","Salud","CEP",3],["Médico general","Salud","CMP",1.5],["Ing. Civil","Ingeniería","CIP",3],["Ing. de Minas","Ingeniería","CIP",1],["Ing. Mecánico","Ingeniería","CIP",1],["Topógrafo","Ingeniería","",1],["Contador","Finanzas","CCP",4],["Asistente administrativo","Finanzas","",5],["Vendedor","Finanzas","",5],["Abogado","Derecho","CAL",2],["Docente","Educación","CPPe",5],["Desarrollador web","Tecnología","",2],["Diseñador gráfico","Diseño","",1.5],["Arquitecto","Arquitectura","CAP",1],["Guía de turismo","Turismo","",1],["Ing. Agrónomo","Agro","CIP",1],["Psicólogo","Psicología","CPsP",1]];
@@ -693,7 +718,7 @@ const OFW=OF.reduce((a,o)=>a+o[3],0);
 const mulberry=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
 const DL=[];Object.entries(DIST).forEach(([pv,rows])=>rows.forEach(r=>DL.push({pv,ds:r[0],la:r[1],lo:r[2],pop:r[3]||3000,dep:CITIES[pv][0]})));
 (()=>{const ws=DL.map(d=>Math.pow(d.pop,1.08)),S=ws.reduce((a,b)=>a+b,0);
-  DL.forEach((d,i)=>{d.n=Math.max(1,Math.round(SIM_TOTAL*ws[i]/S));const h=mulberry(hashN(d.pv+d.ds));d.sya=0.36+0.12*h();d.spr=0.16+0.08*h();d.sno=1-d.sya-d.spr})})();
+  DL.forEach((d,i)=>{d.n=Math.round(SIM_TOTAL*ws[i]/S);const h=mulberry(hashN(d.pv+d.ds));d.sya=0.36+0.12*h();d.spr=0.16+0.08*h();d.sno=1-d.sya-d.spr})})();
 const fmtN=n=>Math.round(n).toLocaleString("es-PE");
 const fmtKPI=n=>n>=1e5?fmtK(n):fmtN(n);
 const fmtK=n=>n>=1e6?(n/1e6).toFixed(1).replace(".0","")+" M":n>=1e4?Math.round(n/1e3)+" k":n>=1e3?(n/1e3).toFixed(1).replace(".0","")+" k":String(Math.round(n));
@@ -852,7 +877,7 @@ function sumC(ds){const k={ya:0,pronto:0,no:0};ds.forEach(d=>{k.ya+=d.c.ya;k.pro
 /* muestra de personas: primero las reales registradas, luego simuladas */
 function sampleIn(ds,k,f){const out=[];
   people.filter(p=>ds.some(d=>d.pv===p.city&&d.ds===p.dist)&&personOK(p,f)).forEach(p=>out.push(p));
-  const tot=ds.reduce((a,d)=>a+d.t,0);if(!tot)return out;
+  const tot=ds.reduce((a,d)=>a+d.t,0);if(!tot||!SIM_TOTAL)return out;
   const r=mulberry(hashN(JSON.stringify(f)+ds.length+(ds[0]?ds[0].ds:"")));const ctr=new Map();
   for(let j=0;j<k*80&&out.length<k;j++){let x=r()*tot,d=ds[0];for(const q of ds){x-=q.t;if(x<=0){d=q;break}}
     const i=ctr.get(d)||0;ctr.set(d,i+1);const p=simPerson(d,i);p._km=d.km;if(personOK(p,f)&&!out.includes(p))out.push(p)}
@@ -1283,7 +1308,7 @@ function viewPerfil(){const me=P(ME);return `
 
 /* ---------- validación del usuario ---------- */
 const VERIF_DOCS=[["penales","Certificado de antecedentes penales"],["policiales","Certificado de antecedentes policiales"],["judiciales","Certificado de antecedentes judiciales"]];
-const PION_MAX=100000,PION_PRICE=5;let pioneros=12588;
+const PION_MAX=100000,PION_PRICE=5;let pioneros=0; /* v25: se cuenta con los registrados reales */
 const pbadge=p=>p.pionero?`<span class="pb" title="Uno de los primeros 100,000 trabajadores de Tu Chamba Causa">Pionero N.º ${fmtN(p.pionero)}</span>`:"";
 const pionUntil=()=>{const d=new Date();d.setFullYear(d.getFullYear()+1);return d.toLocaleDateString("es-PE",{day:"numeric",month:"long",year:"numeric"})};
 function pionBanner(){const left=PION_MAX-pioneros,pct=pioneros/PION_MAX*100;return `<section class="card pion"><div class="pion-t"><span class="pb">Programa Pioneros</span><b>Los primeros 100,000 trabajadores tienen Premium gratis por 1 año</b><span>Sello de verificado, salir destacado y portafolio. Después, solo S/ ${PION_PRICE} al mes.</span></div><div class="pion-c"><div class="pion-n"><b>${fmtN(left)}</b> cupos libres</div><div class="pion-bar"><i style="width:${pct.toFixed(1)}%"></i></div><span class="hint">${fmtN(pioneros)} de 100,000 ya son Pioneros</span></div><a class="btn aji" href="#registro" style="text-decoration:none;white-space:nowrap">Quiero ser Pionero</a></section>`}
@@ -1473,7 +1498,7 @@ const TALENTS=[];
 (()=>{const r=mulberry(777);const pk=a=>a[Math.floor(r()*a.length)];
   for(let i=0;i<28;i++){const t=TAL[i%TAL.length],ins=INST.find(x=>x.id===t[0]),ds=DIST[ins.city]||[];
     const p=prep({id:"t"+i,name:pk(NOM)+" "+pk(APE)+" "+pk(APE),title:t[2]+" · recién egresado",area:t[3],city:ins.city,dist:ds.length?ds[Math.floor(r()*ds.length)][0]:undefined,col:"",disp:r()<0.75?"ya":"pronto",desde:"15 dic",years:0,verif:"ok",egreso:{inst:ins.n,car:t[1],anio:2026}},i);
-    TALENTS.push(p);people.push(p)}})();
+    TALENTS.push(p);DEMO.push(p)}})(); /* v25: egresados de ejemplo fuera del mapa */
 const tbadge=p=>p.egreso?`<span class="tb" title="Validado por el instituto">Egresado ${esc(p.egreso.inst)} ${p.egreso.anio}</span>`:"";
 const EXPS=[
  {id:1,t:"De ayudante a maestro de obra en 10 años",who:"juan",dur:"18 min",views:24800,area:"Construcción y oficios",prof:"Albañil",live:false,txt:"Juan cuenta cómo aprendió el oficio en obra, qué le enseñaron sus maestros y cómo empezó a dirigir cuadrillas."},
@@ -1893,6 +1918,7 @@ async function cargarRegistrados(){
       col:r.colegio||"",disp:r.disponibilidad||(r.disponible?"ya":"no"),years:r.anios_exp||0,verif:r.verificado?"ok":"no",real:true},people.length);
     people.push(p);n++});
   if(!n)return;
+  pioneros=Math.max(pioneros,people.length);
   const v=current();
   if(v==="inicio"&&typeof refreshMap==="function")refreshMap();
   else if(v==="profesionales"){const l=document.getElementById("plist");if(l)l.innerHTML=peopleList()}
