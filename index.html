@@ -576,47 +576,49 @@ fieldset.field{border:0;padding:0;margin:0}
 .pvrow[aria-pressed="true"]{background:color-mix(in srgb,var(--pv) 10%,transparent)}
 .pvrow>b{color:var(--pv)}
 @media (max-width:720px){.bottom a{min-width:0;font-size:10px;letter-spacing:-.01em}.bottom a span:last-child{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
-/* ---------- portada "Muy pronto": el puente (v26) ---------- */
-.obra{--rojo:#D91023;--aji:#F2B124;--tinta:#1B1B1B;position:fixed;inset:0;z-index:9999;display:grid;grid-template-columns:1fr 1.2fr 1fr;background:#fff;overflow:hidden;font-family:Figtree,system-ui,sans-serif;color:var(--tinta)}
-.ob-band{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:28px 18px;min-height:0}
+/* ---------- portada "Muy pronto": el puente (v27) ---------- */
+.obra{--rojo:#D91023;--aji:#F2B124;--tinta:#1B1B1B;position:fixed;inset:0;z-index:9999;display:grid;grid-template-columns:1fr 1.15fr 1fr;background:#fff;overflow:hidden;font-family:Figtree,system-ui,sans-serif;color:var(--tinta)}
+.ob-band{display:flex;flex-direction:column;align-items:center;gap:4px;padding:22px 10px 12px;min-height:0;min-width:0}
 .ob-red{background:var(--rojo);color:#fff}
 .ob-lab{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:clamp(18px,1.7vw,24px);margin:0;letter-spacing:.02em;text-transform:uppercase}
-.ob-sub{margin:-10px 0 0;font-size:13px;opacity:.85}
-.ob-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px 10px;width:100%;max-width:340px}
-.ob-it{display:flex;flex-direction:column;align-items:center;gap:4px;user-select:none;-webkit-user-select:none;transition:transform .2s ease}
-.ob-it svg{width:100%;max-width:74px;height:auto;fill:#fff;overflow:visible;filter:drop-shadow(0 3px 0 rgba(0,0,0,.18))}
-.ob-it span{font-size:12px;font-weight:700;letter-spacing:.01em;text-align:center}
-#ob-wg .ob-it{cursor:grab;touch-action:none}
-#ob-wg .ob-it:hover,#ob-wg .ob-it:focus-visible{transform:translateY(-5px) rotate(-3deg);outline:none}
-#ob-wg .ob-it:focus-visible svg{filter:drop-shadow(0 0 0 #fff) drop-shadow(0 0 6px var(--aji))}
-.ob-it.away svg{opacity:.28}
+.ob-sub{margin:0 0 6px;font-size:13px;opacity:.85}
+.ob-field{position:relative;flex:1;width:100%;min-height:0}
+.ob-it{position:absolute;display:flex;flex-direction:column;align-items:center;gap:2px;user-select:none;-webkit-user-select:none;transform:translate(-50%,-50%) rotate(var(--rot,0deg)) scale(var(--sc,1));transition:transform .2s ease,opacity .2s}
+.ob-it svg{width:100%;height:auto;fill:#fff;overflow:visible;filter:drop-shadow(0 2px 0 rgba(0,0,0,.18))}
+.ob-it span{font-size:10.5px;font-weight:700;letter-spacing:.01em;text-align:center;white-space:nowrap;line-height:1.1}
+.ob-w{cursor:grab;touch-action:none}
+.ob-w:hover,.ob-w:focus-visible{transform:translate(-50%,-50%) rotate(-4deg) scale(1.35);outline:none;z-index:2}
+.ob-w:hover svg,.ob-w:focus-visible svg{fill:var(--aji)}
+.ob-it.away{opacity:.25}
 .ob-it.hit{animation:obpop .7s ease}
-.ob-it.hit svg{fill:var(--aji)}
-.ob-it.target svg{fill:var(--aji)}
-@keyframes obpop{0%{transform:scale(1)}35%{transform:scale(1.22) rotate(4deg)}100%{transform:scale(1)}}
-.ob-c{background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:24px 20px;min-height:0}
+.ob-it.hit svg,.ob-it.target svg{fill:var(--aji)}
+@keyframes obpop{0%{transform:translate(-50%,-50%) scale(1)}35%{transform:translate(-50%,-50%) scale(1.3) rotate(4deg)}100%{transform:translate(-50%,-50%) scale(1)}}
+.ob-tip{position:fixed;z-index:10004;background:var(--tinta);color:#fff;font:700 12px Figtree,system-ui,sans-serif;padding:5px 9px;border-radius:7px;pointer-events:none;transform:translate(-50%,-130%);white-space:nowrap;opacity:0;transition:opacity .15s}
+.ob-tip.on{opacity:1}
+.ob-c{background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:22px 20px;min-height:0}
 .ob-head,.ob-mid,.ob-foot{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
 .ob-mid{width:100%}
 .ob-pill{background:var(--aji);color:#5A3D00;font-weight:800;border-radius:999px;padding:6px 14px;font-size:13px;letter-spacing:.02em}
 .ob-big{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;color:var(--rojo);font-size:clamp(56px,8vw,124px);line-height:.86;margin:0;letter-spacing:-.035em}
-.ob-name{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:clamp(22px,2.4vw,34px);margin:0;letter-spacing:-.01em}
-.ob-name b{color:var(--rojo)}
+.ob-name{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;font-size:clamp(26px,2.9vw,42px);margin:0;letter-spacing:-.01em;line-height:1.1}
+.ob-name .r{color:var(--rojo)}
+.ob-name .w{color:#fff;-webkit-text-stroke:2px var(--tinta);paint-order:stroke fill;text-shadow:0 0 0 #fff}
 .ob-bridge{width:100%;max-width:440px;height:auto;overflow:visible}
 .ob-hint{font-size:14px;font-weight:700;color:var(--rojo);animation:obblink 2.2s ease-in-out infinite}
 @keyframes obblink{50%{opacity:.35}}
 .ob-tag{font-size:clamp(16px,1.45vw,20px);font-weight:700;margin:0;max-width:440px;line-height:1.35}
 .ob-tag span{display:block;font-weight:500;color:#555;font-size:.85em;margin-top:4px}
-.ob-count{font-size:14px;color:#555}
-.ob-count b{color:var(--rojo);font-size:20px}
+.ob-count{font-size:15px;color:#444}
+.ob-count b{color:var(--rojo);font-size:21px}
 .ob-layer{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:10001;overflow:visible}
-.ob-walker{position:fixed;left:0;top:0;width:52px;pointer-events:none;z-index:10002;transform:translate(-50%,-50%)}
+.ob-walker{position:fixed;left:0;top:0;width:44px;pointer-events:none;z-index:10002;transform:translate(-50%,-50%)}
 .ob-walker svg{width:100%;height:auto;fill:#F2B124;overflow:visible;filter:drop-shadow(0 2px 0 #5A3D00) drop-shadow(0 4px 8px rgba(0,0,0,.25))}
-.ob-walker.drag{width:64px}
+.ob-walker.drag{width:56px}
 .ob-match{position:fixed;left:50%;top:14px;transform:translate(-50%,-20px);background:#1B1B1B;color:#fff;font-weight:700;padding:10px 18px;border-radius:999px;font-size:15px;opacity:0;transition:opacity .3s,transform .3s;z-index:10003;white-space:nowrap;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 .ob-match.on{opacity:1;transform:translate(-50%,0)}
 .ob-match i{font-style:normal;color:#F2B124}
 .ob-spark{position:fixed;width:8px;height:8px;border-radius:50%;background:#F2B124;pointer-events:none;z-index:10002}
-html.prueba .obra,html.prueba .ob-layer,html.prueba .ob-match{display:none}
+html.prueba .obra,html.prueba .ob-layer,html.prueba .ob-match,html.prueba .ob-tip{display:none}
 html:not(.prueba) body{overflow:hidden}
 @media (max-width:760px){
   .obra{display:flex;flex-direction:column;overflow-y:auto;-webkit-overflow-scrolling:touch}
@@ -627,10 +629,10 @@ html:not(.prueba) body{overflow:hidden}
   .ob-mid{order:3;padding:12px 16px;background:#fff}
   #ob-e{order:4}
   .ob-foot{order:5;padding:16px 16px 28px;background:#fff}
-  .ob-band{padding:16px 12px;gap:10px}
-  .ob-grid{grid-template-columns:repeat(5,minmax(0,1fr));max-width:440px;gap:10px 6px}
-  .ob-it svg{max-width:50px}
-  .ob-it span{font-size:10.5px}
+  .ob-band{padding:16px 8px 8px}
+  #ob-w .ob-field{height:300px;flex:none}
+  #ob-e .ob-field{height:300px;flex:none}
+  .ob-it span{font-size:9.5px}
   .ob-big{font-size:clamp(52px,17vw,84px)}
   .ob-bridge{max-width:340px}
   .ob-match{font-size:12.5px;top:auto;bottom:14px;transform:translate(-50%,20px)}
@@ -648,13 +650,13 @@ html.prueba .prueba-band{display:block;position:fixed;left:12px;bottom:12px;z-in
 <div class="obra" id="obra" role="region" aria-label="Tu Chamba Causa, muy pronto">
   <section class="ob-band ob-red" id="ob-w" aria-label="Trabajadores">
     <h2 class="ob-lab">Trabajadores</h2><p class="ob-sub">Todos los oficios del Perú</p>
-    <div class="ob-grid" id="ob-wg"></div>
+    <div class="ob-field" id="ob-wg"></div>
   </section>
   <div class="ob-c">
     <div class="ob-head">
       <span class="ob-pill">tuchambacausa.pe</span>
       <h1 class="ob-big">MUY<br>PRONTO</h1>
-      <p class="ob-name">Tu Chamba <b>Causa</b></p>
+      <p class="ob-name"><span class="r">Tu</span> <span class="w">Chamba</span> <span class="r">Causa</span></p>
     </div>
     <div class="ob-mid">
       <svg class="ob-bridge" id="ob-bridge" viewBox="0 0 400 170" aria-hidden="true">
@@ -667,60 +669,115 @@ html.prueba .prueba-band{display:block;position:fixed;left:12px;bottom:12px;z-in
         <rect x="14" y="123" width="16" height="44" fill="#1B1B1B"/><rect x="370" y="123" width="16" height="44" fill="#1B1B1B"/>
         <rect x="190" y="123" width="20" height="44" fill="#1B1B1B"/>
       </svg>
-      <div class="ob-hint" id="ob-hint">Arrastra un trabajador al puente (o tócalo)</div>
+      <div class="ob-hint">Arrastra a cualquier trabajador al puente (o tócalo)</div>
     </div>
     <div class="ob-foot">
       <p class="ob-tag">El puente entre tu chamba y quien la necesita.<span>Conectamos trabajadores y empresas de todo el Perú.</span></p>
-      <div class="ob-count"><b id="ob-n">0</b> <span id="ob-nl">chambas conectadas por ti</span></div>
+      <div class="ob-count" id="ob-count">Conectaste <b id="ob-n">0</b> <span id="ob-nl">chambas</span></div>
     </div>
   </div>
   <section class="ob-band ob-red" id="ob-e" aria-label="Empresas">
-    <h2 class="ob-lab">Empresas</h2><p class="ob-sub">Que buscan gente como tú</p>
-    <div class="ob-grid" id="ob-eg"></div>
+    <h2 class="ob-lab">Empresas</h2><p class="ob-sub">Todos los rubros que buscan gente</p>
+    <div class="ob-field" id="ob-eg"></div>
   </section>
 </div>
 <svg class="ob-layer" id="ob-layer" aria-hidden="true"></svg>
 <div class="ob-match" id="ob-match" role="status" aria-live="polite"></div>
+<div class="ob-tip" id="ob-tip"></div>
 <script>
 (function(){
 if(document.documentElement.classList.contains("prueba"))return;
-const R="#D91023";
-/* ---- siluetas originales (viewBox 64x96) ---- */
+const R="#D91023",F=`fill="${R}"`,S='fill="none" stroke="#fff" stroke-linecap="round"';
+/* ---- siluetas originales de trabajadores (viewBox 64x96) ---- */
 const BODY='<circle cx="32" cy="18" r="9"/><path d="M19 31Q32 27 45 31L52 58 46 60 42 45 42 93 34 93 34 67 30 67 30 93 22 93 22 45 18 60 12 58Z"/>';
 const HELM='<path d="M21 16a11 10 0 0 1 22 0h4v4H17v-4z"/>';
+const CAP='<path d="M22 14q10-9 20 0v3H22z"/><rect x="38" y="14" width="10" height="3" rx="1.5"/>';
+const HAT='<ellipse cx="32" cy="11" rx="17" ry="3.5"/><path d="M24 11q8-12 16 0z"/>';
+const WHEEL=`<circle cx="54" cy="52" r="9" ${S} stroke-width="3.5"/><circle cx="54" cy="52" r="2.5"/>`;
 const W=[
- {k:"albanil",n:"Albañil",c:"constructora",x:HELM+'<path d="M47 57l13 5-3 6-12-6z"/><rect x="44" y="55" width="5" height="5"/>'},
- {k:"pintor",n:"Pintor",c:"oficinas",x:'<path d="M23 12q9-7 18 0v4H23z"/><rect x="3" y="36" width="18" height="8" rx="3"/><rect x="10.5" y="44" width="3" height="16"/>'},
- {k:"ingeniero",n:"Ingeniera",c:"minera",x:HELM+'<rect x="45" y="44" width="15" height="19" rx="2"/><rect x="48" y="48" width="9" height="2.5" fill="'+R+'"/><rect x="48" y="53" width="9" height="2.5" fill="'+R+'"/>'},
- {k:"enfermera",n:"Enfermera",c:"clinica",x:'<path d="M23 11l3-8h12l3 8z"/><rect x="30.5" y="4" width="3" height="6" fill="'+R+'"/><rect x="29" y="5.5" width="6" height="3" fill="'+R+'"/><rect x="29" y="37" width="6" height="2.5" fill="'+R+'"/><rect x="30.75" y="35.25" width="2.5" height="6" fill="'+R+'"/>'},
- {k:"cocinera",n:"Cocinera",c:"restaurante",x:'<path d="M23 13a6 6 0 0 1 3-10 7 7 0 0 1 12 0 6 6 0 0 1 3 10v3H23z"/><path d="M50 50l9-12 3 2-9 12z"/>'},
- {k:"soldador",n:"Soldador",c:"transportes",x:'<rect x="21" y="7" width="22" height="21" rx="5"/><rect x="24" y="13" width="16" height="6" rx="1" fill="'+R+'"/><path d="M50 58l6-4 1 2-5 4z"/><circle cx="60" cy="50" r="2"/><circle cx="62" cy="56" r="1.5"/><circle cx="57" cy="46" r="1.3"/>'},
- {k:"agricultor",n:"Agricultor",c:"agro",x:'<ellipse cx="32" cy="11" rx="17" ry="3.5"/><path d="M24 11q8-12 16 0z"/><rect x="7" y="14" width="3" height="48"/><path d="M2 12h13v6H2z"/>'},
- {k:"operador",n:"Operador",c:"constructora2",x:HELM+'<rect x="22" y="40" width="20" height="3.5" fill="'+R+'"/><rect x="22" y="48" width="20" height="3.5" fill="'+R+'"/>'},
- {k:"chofer",n:"Chofer",c:"taxis",x:'<path d="M22 14q10-9 20 0v3H22z"/><rect x="38" y="14" width="10" height="3" rx="1.5"/><circle cx="54" cy="52" r="9" fill="none" stroke="#fff" stroke-width="3.5"/><circle cx="54" cy="52" r="2.5"/>'}
+ ["Albañil","constructora",HELM+'<path d="M47 57l13 5-3 6-12-6z"/><rect x="44" y="55" width="5" height="5"/>'],
+ ["Pintor","hogar",'<path d="M23 12q9-7 18 0v4H23z"/><rect x="3" y="36" width="18" height="8" rx="3"/><rect x="10.5" y="44" width="3" height="16"/>'],
+ ["Ingeniera civil","obra",HELM+`<rect x="45" y="44" width="15" height="19" rx="2"/><rect x="48" y="48" width="9" height="2.5" ${F}/><rect x="48" y="53" width="9" height="2.5" ${F}/>`],
+ ["Enfermera","clinica",`<path d="M23 11l3-8h12l3 8z"/><rect x="30.5" y="4" width="3" height="6" ${F}/><rect x="29" y="5.5" width="6" height="3" ${F}/><rect x="29" y="37" width="6" height="2.5" ${F}/><rect x="30.75" y="35.25" width="2.5" height="6" ${F}/>`],
+ ["Cocinera","restaurante",'<path d="M23 13a6 6 0 0 1 3-10 7 7 0 0 1 12 0 6 6 0 0 1 3 10v3H23z"/><path d="M50 50l9-12 3 2-9 12z"/>'],
+ ["Soldador","fabrica",`<rect x="21" y="7" width="22" height="21" rx="5"/><rect x="24" y="13" width="16" height="6" rx="1" ${F}/><path d="M50 58l6-4 1 2-5 4z"/><circle cx="60" cy="50" r="2"/><circle cx="62" cy="56" r="1.5"/><circle cx="57" cy="46" r="1.3"/>`],
+ ["Agricultor","agro",HAT+'<rect x="7" y="14" width="3" height="48"/><path d="M2 12h13v6H2z"/>'],
+ ["Operador de maquinaria","obra",HELM+`<rect x="22" y="40" width="20" height="3.5" ${F}/><rect x="22" y="48" width="20" height="3.5" ${F}/>`],
+ ["Chofer de taxi","taxis",CAP+WHEEL],
+ ["Operador de volquete","minera",HELM+`<rect x="22" y="40" width="20" height="3.5" ${F}/>`+WHEEL],
+ ["Ingeniero de minas","minera",HELM+`<circle cx="32" cy="11" r="2.6" ${F}/><path d="M46 58l12-16" ${S} stroke-width="3"/><path d="M52 40q8-2 12 6l-2 1q-4-5-9-4z"/>`],
+ ["Electricista","obra",HELM+'<path d="M53 38l-7 11h5l-4 11 10-14h-5l4-8z"/>'],
+ ["Gasfitero","hogar",CAP+`<path d="M47 59l10-11" ${S} stroke-width="3.5"/><circle cx="59" cy="46" r="4.5"/><circle cx="60" cy="45" r="1.8" ${F}/>`],
+ ["Carpintero","constructora",CAP+'<rect x="50" y="46" width="3" height="16"/><rect x="45" y="42" width="14" height="5" rx="1"/>'],
+ ["Mecánico","taller",CAP+`<path d="M47 59l10-11" ${S} stroke-width="3.5"/><path d="M55 42l7 0-2 7-5 1z"/><rect x="24" y="44" width="16" height="3" ${F}/>`],
+ ["Vigilante","banco",`<path d="M21 13l2-7h18l2 7z"/><rect x="20" y="12" width="24" height="3.5"/><circle cx="32" cy="9" r="1.8" ${F}/><path d="M36 37l1.5 3 3 .3-2.3 2 .7 3-2.9-1.6-2.9 1.6.7-3-2.3-2 3-.3z" ${F}/>`],
+ ["Docente","colegio",`<rect x="44" y="45" width="15" height="12" rx="1"/><rect x="50.8" y="45" width="1.6" height="12" ${F}/>`],
+ ["Médico","clinica",`<path d="M26 32v8a6 6 0 0 0 12 0v-8" fill="none" stroke="${R}" stroke-width="2"/><circle cx="38" cy="47" r="2.6" ${F}/>`],
+ ["Ama de casa","hogar",`<rect x="25" y="37" width="14" height="22" rx="2" ${F}/><rect x="7" y="20" width="2.6" height="42"/><path d="M3 60h11l3 11H0z"/>`],
+ ["Mesero","hotel",'<rect x="44" y="40" width="19" height="2.6"/><path d="M47 40q6.5-9 13 0z"/><path d="M28 31l4 4 4-4z" fill="'+R+'"/>'],
+ ["Costurera","fabrica",`<circle cx="52" cy="60" r="3" ${S} stroke-width="2"/><circle cx="59" cy="58" r="3" ${S} stroke-width="2"/><path d="M53 57l7-14M58 55l-3-12" ${S} stroke-width="2"/>`],
+ ["Topógrafo","obra",HELM+`<path d="M56 40l-6 52M56 40v52M56 40l6 52" ${S} stroke-width="2"/><rect x="51" y="31" width="10" height="9" rx="1.5"/><rect x="53" y="33.5" width="6" height="3" ${F}/>`],
+ ["Pescador","pesquera",HAT+`<path d="M48 58L62 4" ${S} stroke-width="2"/><path d="M62 4v22" fill="none" stroke="#fff" stroke-width="1"/>`],
+ ["Programadora","oficinas",`<rect x="20" y="51" width="26" height="3"/><rect x="22" y="38" width="22" height="14" rx="1.5" ${F}/><rect x="24" y="40" width="18" height="10" rx="1"/>`],
+ ["Contadora","banco",`<rect x="45" y="44" width="12" height="16" rx="1.5"/><rect x="47" y="46" width="8" height="3.5" ${F}/><rect x="47" y="51.5" width="2.5" height="2.5" ${F}/><rect x="52" y="51.5" width="2.5" height="2.5" ${F}/><rect x="47" y="56" width="2.5" height="2.5" ${F}/><rect x="52" y="56" width="2.5" height="2.5" ${F}/>`],
+ ["Vendedora","bodega",'<path d="M46 52h13l-1.5 13h-10z"/><path d="M49 52q3.5-7 7 0" fill="none" stroke="#fff" stroke-width="1.6"/><circle cx="52.5" cy="58" r="2" fill="'+R+'"/>'],
+ ["Jardinero","hotel",HAT+'<path d="M9 62q-8-11 1-18 3 9-1 18zM11 62q9-9 2-18-4 9-2 18z"/><rect x="9" y="60" width="3" height="6"/>'],
+ ["Camionero","transportes",CAP+`<rect x="24" y="44" width="16" height="3" ${F}/>`+WHEEL],
+ ["Panadero","bodega",'<path d="M23 13a6 6 0 0 1 3-10 7 7 0 0 1 12 0 6 6 0 0 1 3 10v3H23z"/><ellipse cx="53" cy="52" rx="9" ry="5"/><path d="M48 50l2 4M53 49l2 5M58 50l1 3" stroke="'+R+'" stroke-width="1.5"/>']
 ];
-/* ---- empresas (viewBox 96x64) ---- */
-const HUB=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}"/><circle cx="${x}" cy="${y}" r="${r*.38}" fill="${R}"/>`;
+/* ---- empresas por rubro (viewBox 96x64) ---- */
+const HUB=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}"/><circle cx="${x}" cy="${y}" r="${r*.38}" ${F}/>`;
+const WIN=(x0,y0,cols,rows,dx,dy,w,h)=>{let s="";for(let r=0;r<rows;r++)for(let c=0;c<cols;c++)s+=`<rect x="${x0+c*dx}" y="${y0+r*dy}" width="${w}" height="${h}" ${F}/>`;return s};
 const E=[
- {k:"constructora",n:"Constructora",x:'<rect x="6" y="48" width="58" height="12" rx="6"/><circle cx="14" cy="54" r="2.5" fill="'+R+'"/><circle cx="35" cy="54" r="2.5" fill="'+R+'"/><circle cx="56" cy="54" r="2.5" fill="'+R+'"/><rect x="12" y="30" width="40" height="18" rx="2"/><rect x="34" y="14" width="18" height="18" rx="2"/><rect x="37" y="17" width="12" height="9" fill="'+R+'"/><path d="M50 34L72 10 88 32" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/><path d="M81 30h14l-4 12H83z"/>'},
- {k:"minera",n:"Minera",x:'<path d="M4 14h56v28H14z"/><rect x="62" y="20" width="28" height="24" rx="3"/><rect x="67" y="24" width="15" height="9" fill="'+R+'"/><rect x="4" y="42" width="88" height="6"/>'+HUB(20,52,8)+HUB(44,52,8)+HUB(78,52,8)},
- {k:"agro",n:"Agroindustria",x:HUB(26,44,17)+HUB(76,52,10)+'<rect x="30" y="30" width="50" height="14" rx="3"/><rect x="16" y="6" width="28" height="28" rx="3"/><rect x="21" y="11" width="18" height="12" fill="'+R+'"/><rect x="64" y="14" width="5" height="16"/>'},
- {k:"taxis",n:"Taxis",x:'<rect x="36" y="4" width="24" height="9" rx="2"/><text x="48" y="11.5" font-size="7.5" font-weight="800" text-anchor="middle" fill="'+R+'" font-family="system-ui">TAXI</text><path d="M6 42q2-11 13-13l11-13h36l12 13q13 2 13 13v8H6z"/><path d="M33 19h13v10H25zM50 19h13l8 10H50z" fill="'+R+'"/>'+HUB(24,52,8)+HUB(74,52,8)},
- {k:"clinica",n:"Clínica",x:'<rect x="18" y="8" width="60" height="54" rx="3"/><rect x="42" y="14" width="12" height="32" fill="'+R+'"/><rect x="32" y="24" width="32" height="12" fill="'+R+'"/><rect x="40" y="50" width="16" height="12" fill="'+R+'"/>'},
- {k:"restaurante",n:"Restaurante",x:'<rect x="14" y="24" width="68" height="38"/><path d="M8 12h80l-4 14H12z"/><path d="M14 26h10l-1 6h-8zM34 26h10l-1 6h-8zM54 26h10l-1 6h-8zM74 26h8l-1 6h-7z" fill="'+R+'"/><rect x="40" y="42" width="16" height="20" fill="'+R+'"/><rect x="20" y="40" width="14" height="12" fill="'+R+'"/><rect x="62" y="40" width="14" height="12" fill="'+R+'"/>'},
- {k:"oficinas",n:"Empresa",x:'<rect x="26" y="2" width="44" height="60" rx="2"/>'+[0,1,2,3].map(r=>[0,1,2].map(c=>`<rect x="${32+c*12}" y="${8+r*12}" width="8" height="7" fill="${R}"/>`).join("")).join("")+'<rect x="42" y="52" width="12" height="10" fill="'+R+'"/>'},
- {k:"transportes",n:"Transportes",x:'<rect x="4" y="16" width="58" height="28" rx="14"/><rect x="64" y="18" width="28" height="26" rx="3"/><rect x="69" y="22" width="15" height="9" fill="'+R+'"/><rect x="4" y="42" width="88" height="6"/>'+HUB(18,52,7)+HUB(40,52,7)+HUB(78,52,7)},
- {k:"constructora2",n:"Obra civil",x:'<rect x="10" y="4" width="5" height="58"/><rect x="10" y="4" width="76" height="5"/><path d="M15 9l12-5" stroke="#fff" stroke-width="3"/><rect x="62" y="9" width="2" height="22"/><rect x="56" y="31" width="14" height="9"/><rect x="34" y="40" width="30" height="22"/><path d="M38 44h6v6h-6zM50 44h6v6h-6z" fill="'+R+'"/>'}
+ ["constructora","Constructora",`<rect x="6" y="48" width="58" height="12" rx="6"/><circle cx="14" cy="54" r="2.5" ${F}/><circle cx="35" cy="54" r="2.5" ${F}/><circle cx="56" cy="54" r="2.5" ${F}/><rect x="12" y="30" width="40" height="18" rx="2"/><rect x="34" y="14" width="18" height="18" rx="2"/><rect x="37" y="17" width="12" height="9" ${F}/><path d="M50 34L72 10 88 32" fill="none" stroke="#fff" stroke-width="6" stroke-linejoin="round"/><path d="M81 30h14l-4 12H83z"/>`],
+ ["minera","Minera",`<path d="M4 14h56v28H14z"/><rect x="62" y="20" width="28" height="24" rx="3"/><rect x="67" y="24" width="15" height="9" ${F}/><rect x="4" y="42" width="88" height="6"/>`+HUB(20,52,8)+HUB(44,52,8)+HUB(78,52,8)],
+ ["agro","Agroindustria",HUB(26,44,17)+HUB(76,52,10)+`<rect x="30" y="30" width="50" height="14" rx="3"/><rect x="16" y="6" width="28" height="28" rx="3"/><rect x="21" y="11" width="18" height="12" ${F}/><rect x="64" y="14" width="5" height="16"/>`],
+ ["taxis","Taxis",`<rect x="36" y="4" width="24" height="9" rx="2"/><text x="48" y="11.5" font-size="7.5" font-weight="800" text-anchor="middle" ${F} font-family="system-ui">TAXI</text><path d="M6 42q2-11 13-13l11-13h36l12 13q13 2 13 13v8H6z"/><path d="M33 19h13v10H25zM50 19h13l8 10H50z" ${F}/>`+HUB(24,52,8)+HUB(74,52,8)],
+ ["clinica","Clínica",`<rect x="18" y="8" width="60" height="54" rx="3"/><rect x="42" y="14" width="12" height="32" ${F}/><rect x="32" y="24" width="32" height="12" ${F}/><rect x="40" y="50" width="16" height="12" ${F}/>`],
+ ["restaurante","Restaurante",`<rect x="14" y="24" width="68" height="38"/><path d="M8 12h80l-4 14H12z"/><path d="M14 26h10l-1 6h-8zM34 26h10l-1 6h-8zM54 26h10l-1 6h-8zM74 26h8l-1 6h-7z" ${F}/><rect x="40" y="42" width="16" height="20" ${F}/><rect x="20" y="40" width="14" height="12" ${F}/><rect x="62" y="40" width="14" height="12" ${F}/>`],
+ ["oficinas","Oficinas",'<rect x="26" y="2" width="44" height="60" rx="2"/>'+WIN(32,8,3,4,12,12,8,7)+`<rect x="42" y="52" width="12" height="10" ${F}/>`],
+ ["transportes","Transportes",`<rect x="4" y="16" width="58" height="28" rx="14"/><rect x="64" y="18" width="28" height="26" rx="3"/><rect x="69" y="22" width="15" height="9" ${F}/><rect x="4" y="42" width="88" height="6"/>`+HUB(18,52,7)+HUB(40,52,7)+HUB(78,52,7)],
+ ["obra","Obra civil",`<rect x="10" y="4" width="5" height="58"/><rect x="10" y="4" width="76" height="5"/><path d="M15 9l12-5" stroke="#fff" stroke-width="3"/><rect x="62" y="9" width="2" height="22"/><rect x="56" y="31" width="14" height="9"/><rect x="34" y="40" width="30" height="22"/><path d="M38 44h6v6h-6zM50 44h6v6h-6z" ${F}/>`],
+ ["hogar","Hogar",`<path d="M48 4L8 34h10v28h60V34h10z"/><rect x="40" y="42" width="16" height="20" ${F}/><rect x="23" y="38" width="11" height="10" ${F}/><rect x="62" y="38" width="11" height="10" ${F}/><rect x="66" y="10" width="7" height="14"/>`],
+ ["colegio","Colegio",`<rect x="8" y="28" width="80" height="34"/><path d="M48 6L28 28h40z"/><circle cx="48" cy="19" r="4.5" ${F}/>`+WIN(14,34,6,1,12,0,8,8)+`<rect x="42" y="46" width="12" height="16" ${F}/><rect x="47" y="0" width="2" height="8"/><path d="M49 0h9l-2 3 2 3h-9z" ${F}/>`],
+ ["taller","Taller mecánico",`<path d="M6 24L48 4l42 20v38H6z"/><rect x="18" y="30" width="60" height="32" ${F}/><path d="M18 38h60M18 46h60M18 54h60" stroke="#fff" stroke-width="2"/>`],
+ ["hotel","Hotel",`<rect x="22" y="2" width="52" height="60" rx="2"/><text x="48" y="20" font-size="15" font-weight="800" text-anchor="middle" ${F} font-family="system-ui">H</text>`+WIN(28,26,4,3,11,10,7,6)+`<rect x="41" y="54" width="14" height="8" ${F}/>`],
+ ["fabrica","Fábrica",`<path d="M4 62V32l20 12V32l20 12V32l20 12V8h12v54z"/><rect x="66" y="4" width="8" height="6"/>`+WIN(10,48,4,1,14,0,7,7)+`<circle cx="74" cy="2" r="3" fill="#fff" opacity=".6"/>`],
+ ["banco","Banco",`<path d="M48 2L4 22h88z"/><rect x="8" y="22" width="80" height="5"/>`+[14,30,46,62,78].map(x=>`<rect x="${x-3}" y="30" width="8" height="24"/>`).join("")+`<rect x="4" y="56" width="88" height="6"/><circle cx="48" cy="14" r="3.5" ${F}/>`],
+ ["bodega","Bodega",`<rect x="12" y="26" width="72" height="36"/><path d="M6 12h84v14H6z"/><path d="M6 12h12v14H6zM30 12h12v14H30zM54 12h12v14H54zM78 12h12v14H78z" ${F}/><rect x="40" y="40" width="16" height="22" ${F}/><rect x="18" y="34" width="16" height="14" ${F}/><rect x="62" y="34" width="16" height="14" ${F}/>`],
+ ["pesquera","Pesquera",`<path d="M4 38h88l-12 16H16z"/><rect x="38" y="16" width="24" height="22"/><rect x="45" y="5" width="4" height="11"/><rect x="42" y="20" width="16" height="8" ${F}/><path d="M0 60q8-4 16 0t16 0 16 0 16 0 16 0 16 0" fill="none" stroke="#fff" stroke-width="2.5"/>`]
 ];
-const svgW=w=>`<svg viewBox="0 0 64 96" aria-hidden="true">${BODY}${w.x}</svg>`;
-const svgE=e=>`<svg viewBox="0 0 96 64" aria-hidden="true">${e.x}</svg>`;
+const svgW=w=>`<svg viewBox="0 0 64 96" aria-hidden="true">${BODY}${w[2]}</svg>`;
+const svgE=e=>`<svg viewBox="0 0 96 64" aria-hidden="true">${e[2]}</svg>`;
 const $=id=>document.getElementById(id);
-$("ob-wg").innerHTML=W.map((w,i)=>`<div class="ob-it" tabindex="0" role="button" aria-label="Llevar ${w.n} al puente" data-w="${i}">${svgW(w)}<span>${w.n}</span></div>`).join("");
-$("ob-eg").innerHTML=E.map((e,i)=>`<div class="ob-it" data-e="${e.k}">${svgE(e)}<span>${e.n}</span></div>`).join("");
+const mulb=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
 /* tirantes del puente */
 (function(){let h="";for(let x=52;x<=348;x+=24){const t=(x-22)/356,y=Math.pow(1-t,2)*112+2*(1-t)*t*(-6)+t*t*112;h+=`<line x1="${x}" y1="${y.toFixed(1)}" x2="${x}" y2="112"/>`}$("ob-hangers").innerHTML=h})();
+/* reparte las siluetas "desparramadas" en la franja */
+function scatter(field,n,cw,ch,seed){const r=mulb(seed),w=field.clientWidth,h=field.clientHeight;
+  let cols=Math.max(1,Math.floor(w/cw)),rows=Math.max(1,Math.floor(h/ch));while(cols*rows<n&&cw>20){cw*=.92;ch*=.92;cols=Math.floor(w/cw);rows=Math.floor(h/ch)}
+  const cells=[];for(let y=0;y<rows;y++)for(let x=0;x<cols;x++)cells.push([x,y]);
+  for(let i=cells.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[cells[i],cells[j]]=[cells[j],cells[i]]}
+  const gx=(w-cols*cw)/2,gy=(h-rows*ch)/2;
+  return {cw,ch,cells:cells.slice(0,n).map(([x,y])=>({x:gx+(x+.5+(r()-.5)*.55)*cw,y:gy+(y+.5+(r()-.5)*.45)*ch,rot:(r()-.5)*14,sc:.85+r()*.3}))}}
+function layout(){
+  const wf=$("ob-wg"),ef=$("ob-eg"),mob=innerWidth<=760;
+  /* trabajadores: llena la franja, todos los oficios aparecen al menos una vez */
+  const cw=mob?42:54,ch=mob?60:74;
+  const cap=Math.max(W.length,Math.floor(wf.clientWidth/cw)*Math.floor(wf.clientHeight/ch));
+  const L=scatter(wf,cap,cw,ch,2026),r=mulb(11);
+  const order=[];while(order.length<cap){const o=W.map((_,i)=>i);for(let i=o.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[o[i],o[j]]=[o[j],o[i]]}order.push(...o)}
+  const sw=Math.min(L.cw*.62,mob?26:36);
+  wf.innerHTML=L.cells.map((c,k)=>{const t=order[k];return `<div class="ob-it ob-w" tabindex="0" role="button" aria-label="${W[t][0]}: llevar al puente" data-w="${t}" style="left:${c.x}px;top:${c.y}px;width:${sw}px;--rot:${c.rot.toFixed(1)}deg;--sc:${c.sc.toFixed(2)}">${svgW(W[t])}</div>`}).join("");
+  /* empresas: una de cada rubro, con su nombre */
+  const ecols=mob?4:3,erows=Math.ceil(E.length/ecols),ecw=ef.clientWidth/ecols,ech=ef.clientHeight/erows,er=mulb(77);
+  const E2={cw:ecw,cells:E.map((_,k)=>{const cx=k%ecols,cy=Math.floor(k/ecols),off=(cy%2)*.18;return {x:Math.min(ef.clientWidth-30,(cx+.5+off+(er()-.5)*.3)*ecw),y:(cy+.5+(er()-.5)*.3)*ech,rot:(er()-.5)*10}})};
+  const ew=Math.min(ecw*.6,ech*.6,mob?44:62);
+  ef.innerHTML=E2.cells.map((c,k)=>`<div class="ob-it" data-e="${E[k][0]}" style="left:${c.x}px;top:${c.y}px;width:${ew+22}px;--rot:${(c.rot*.4).toFixed(1)}deg">${svgE(E[k]).replace("<svg",`<svg style="width:${ew}px"`)}<span>${E[k][1]}</span></div>`).join("");
+}
+layout();let rz;addEventListener("resize",()=>{clearTimeout(rz);rz=setTimeout(()=>{if(!busy)layout()},200)});
 
-const layer=$("ob-layer"),bridge=$("ob-bridge"),match=$("ob-match");
+const layer=$("ob-layer"),bridge=$("ob-bridge"),match=$("ob-match"),tip=$("ob-tip");
 const NS="http://www.w3.org/2000/svg";
 const ctr=el=>{const r=el.getBoundingClientRect();return [r.left+r.width/2,r.top+r.height/2]};
 const bpt=(x,y)=>{const m=bridge.getScreenCTM();return [m.a*x+m.c*y+m.e,m.b*x+m.d*y+m.f]};
@@ -730,12 +787,11 @@ function walkerAt(w,x,y,drag){const d=document.createElement("div");d.className=
 function sparks(x,y){for(let i=0;i<12;i++){const s=document.createElement("div");s.className="ob-spark";document.body.appendChild(s);
   const a=Math.PI*2*i/12,dist=30+Math.random()*26;s.animate([{left:x+"px",top:y+"px",opacity:1,transform:"scale(1)"},{left:x+Math.cos(a)*dist+"px",top:y+Math.sin(a)*dist+"px",opacity:0,transform:"scale(.3)"}],{duration:650,easing:"cubic-bezier(.2,.7,.3,1)"}).onfinish=()=>s.remove()}}
 let mt;function say(html){match.innerHTML=html;match.classList.add("on");clearTimeout(mt);mt=setTimeout(()=>match.classList.remove("on"),2600)}
-function cross(i,from,targetKey){
-  if(busy>=3)return;busy++;
-  const w=W[i],item=document.querySelector(`[data-w="${i}"]`);
-  const ek=targetKey||w.c,eItem=document.querySelector(`[data-e="${ek}"]`),e=E.find(x=>x.k===ek);
+function cross(item,targetKey){
+  if(busy>=3||!item||item.classList.contains("away"))return;busy++;
+  const w=W[+item.dataset.w],ek=targetKey||w[1],eItem=document.querySelector(`[data-e="${ek}"]`),e=E.find(x=>x[0]===ek);
   item.classList.add("away");eItem.classList.add("target");
-  const start=from||ctr(item),L=bpt(22,104),M=bpt(200,98),Rr=bpt(378,104),end=ctr(eItem);
+  const start=ctr(item),L=bpt(22,104),M=bpt(200,98),Rr=bpt(378,104),end=ctr(eItem);
   const pts=[start,L,M,Rr,end],seg=[];let tot=0;
   for(let j=1;j<pts.length;j++){const d=Math.hypot(pts[j][0]-pts[j-1][0],pts[j][1]-pts[j-1][1]);seg.push(d);tot+=d}
   const walker=walkerAt(w,start[0],start[1]);
@@ -747,37 +803,37 @@ function cross(i,from,targetKey){
     walker.style.left=x+"px";walker.style.top=(y+bob)+"px";walker.style.transform=`translate(-50%,-50%) rotate(${Math.sin(ef*60)*5}deg)`;
     drawn.push([x,y]);trail.setAttribute("d","M"+drawn.map(p=>p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" L"));
     if(f<1)return requestAnimationFrame(step);
-    /* llegó: conexión */
     eItem.classList.remove("target");eItem.classList.add("hit");sparks(end[0],end[1]);
     walker.animate([{opacity:1,transform:"translate(-50%,-50%) scale(1)"},{opacity:0,transform:"translate(-50%,-50%) scale(.4)"}],{duration:450,fill:"forwards"}).onfinish=()=>walker.remove();
-    count++;$("ob-n").textContent=count;$("ob-nl").textContent=count===1?"chamba conectada por ti":"chambas conectadas por ti";
-    say(`${w.n} <i>+</i> ${e.n}: <i>¡chamba conectada, causa!</i>`);
+    count++;$("ob-n").textContent=count;$("ob-nl").textContent=count===1?"chamba":"chambas";
+    say(`${w[0]} <i>+</i> ${e[1]}: <i>¡chamba conectada, causa!</i>`);
     trail.animate([{opacity:1},{opacity:0}],{duration:900,delay:700,fill:"forwards"}).onfinish=()=>trail.remove();
     setTimeout(()=>{eItem.classList.remove("hit");item.classList.remove("away");busy--},800);
   })(t0);
 }
+/* nombre del oficio al pasar el mouse */
+$("ob-wg").addEventListener("pointerover",ev=>{const it=ev.target.closest("[data-w]");if(!it||ev.pointerType==="touch")return;const r=it.getBoundingClientRect();tip.textContent=W[+it.dataset.w][0];tip.style.left=r.left+r.width/2+"px";tip.style.top=r.top+"px";tip.classList.add("on")});
+$("ob-wg").addEventListener("pointerout",()=>tip.classList.remove("on"));
 /* arrastrar / tocar */
 let drag=null;
-$("ob-wg").addEventListener("pointerdown",ev=>{const it=ev.target.closest("[data-w]");if(!it)return;ev.preventDefault();lastTouch=Date.now();
-  drag={i:+it.dataset.w,x0:ev.clientX,y0:ev.clientY,moved:false,el:null,id:ev.pointerId};it.setPointerCapture(ev.pointerId)});
+$("ob-wg").addEventListener("pointerdown",ev=>{const it=ev.target.closest("[data-w]");if(!it||it.classList.contains("away"))return;ev.preventDefault();lastTouch=Date.now();tip.classList.remove("on");
+  drag={it,x0:ev.clientX,y0:ev.clientY,moved:false,el:null,id:ev.pointerId};it.setPointerCapture(ev.pointerId)});
 $("ob-wg").addEventListener("pointermove",ev=>{if(!drag||ev.pointerId!==drag.id)return;
-  if(!drag.moved&&Math.hypot(ev.clientX-drag.x0,ev.clientY-drag.y0)>6){drag.moved=true;drag.el=walkerAt(W[drag.i],ev.clientX,ev.clientY,true);document.querySelector(`[data-w="${drag.i}"]`).classList.add("away")}
+  if(!drag.moved&&Math.hypot(ev.clientX-drag.x0,ev.clientY-drag.y0)>6){drag.moved=true;drag.el=walkerAt(W[+drag.it.dataset.w],ev.clientX,ev.clientY,true);drag.it.classList.add("away")}
   if(drag.el){drag.el.style.left=ev.clientX+"px";drag.el.style.top=ev.clientY+"px"}});
 function endDrag(ev){if(!drag||ev.pointerId!==drag.id)return;const d=drag;drag=null;lastTouch=Date.now();
-  if(!d.moved){cross(d.i);return}
-  d.el.remove();const item=document.querySelector(`[data-w="${d.i}"]`);
+  if(!d.moved){cross(d.it);return}
+  d.el.remove();d.it.classList.remove("away");
   const over=document.elementsFromPoint(ev.clientX,ev.clientY);
   const eHit=over.map(n=>n.closest&&n.closest("[data-e]")).find(Boolean);
-  const inW=over.some(n=>n.id==="ob-w");
-  if(eHit||!inW){item.classList.remove("away");cross(d.i,null,eHit?eHit.dataset.e:null)}
-  else{item.classList.remove("away")}}
+  if(eHit||!over.some(n=>n.id==="ob-w"))cross(d.it,eHit?eHit.dataset.e:null)}
 $("ob-wg").addEventListener("pointerup",endDrag);
-$("ob-wg").addEventListener("pointercancel",ev=>{if(drag&&drag.el)drag.el.remove();if(drag)document.querySelector(`[data-w="${drag.i}"]`).classList.remove("away");drag=null});
-$("ob-wg").addEventListener("keydown",ev=>{const it=ev.target.closest("[data-w]");if(it&&(ev.key==="Enter"||ev.key===" ")){ev.preventDefault();lastTouch=Date.now();cross(+it.dataset.w)}});
+$("ob-wg").addEventListener("pointercancel",()=>{if(drag){if(drag.el)drag.el.remove();drag.it.classList.remove("away")}drag=null});
+$("ob-wg").addEventListener("keydown",ev=>{const it=ev.target.closest("[data-w]");if(it&&(ev.key==="Enter"||ev.key===" ")){ev.preventDefault();lastTouch=Date.now();cross(it)}});
 /* demostración automática cuando nadie toca (sirve para grabar video) */
-let demo=0;
-if(!reduce)setInterval(()=>{if(Date.now()-lastTouch<6000||document.hidden||busy)return;cross(demo%W.length);demo+=4},3200);
-setTimeout(()=>{if(!reduce&&Date.now()-lastTouch>1200)cross(0)},1400);
+const pick=()=>{const all=[...document.querySelectorAll("#ob-wg [data-w]:not(.away)")];return all[Math.floor(Math.random()*all.length)]};
+if(!reduce)setInterval(()=>{if(Date.now()-lastTouch<6000||document.hidden||busy)return;cross(pick())},3000);
+setTimeout(()=>{if(!reduce&&Date.now()-lastTouch>1200)cross(pick())},1400);
 })();
 </script>
 
